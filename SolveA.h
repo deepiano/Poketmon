@@ -20,6 +20,9 @@ struct Route
 	int poketmon_counter[NUM_ID];
 };
 
+/*
+	ProblemA : In specific time, we have to catch specific Poketmon as many as possible.
+*/
 class SolveA
 {
 public:
@@ -28,9 +31,16 @@ public:
 
 	vector<Route> getSolutionA();
 	
-	void backtrack(vector<NodeType>& sol, bool visited[], int time, int poketmon_counter[]);
+	/*
+	sol : solution
+	visited : if true - The place has visited
+	catched : if true - Poketmon has catched
+	time : time
+	poketmon_counter : check counter
+	*/
+	void backtrack(vector<NodeType>& sol, bool visited[], bool catched[], int time, int poketmon_counter[]);
 	bool promising(vector<NodeType>& sol);
-	void construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand);
+	void construct_candidates(vector<NodeType>& sol, bool visited[], bool cahtched[], vector<int>& cand);
 	void process_solution(vector<NodeType>& sol, int time, int poketmon_counter[]);
 	void make_all_route();
 
@@ -43,5 +53,6 @@ private:
 
 	int specificTime;
 	int specific_poketmon_id;
+	int num_poketball;
 };
 

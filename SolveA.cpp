@@ -31,7 +31,7 @@ bool SolveA::promising(vector<NodeType>& sol)
 
 
 // 방문하지 않은 노드만 방문하도록 후보를 만든다.
-void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand)
+void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], bool catched[], vector<int>& cand)
 {
 	vector<int> adj;
 
@@ -42,8 +42,12 @@ void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], vector<
 	{
 		NodeType cur_node = graph.getNodeByIndex(adj[i]);
 		if (cur_node.MonsterType == START_ID) cand.push_back(cur_node.index);
-		else if(!visited[adj[i]]) 
-			cand.push_back(adj[i]);
+		if (num_poketball > 0)
+			if (!catched[adj[i]])
+				cand.push_back(adj[i]);
+		else
+			if (!visited[adj[i]])
+				cand.push_back(adj[i]);
 	}
 }
 
@@ -59,7 +63,7 @@ void SolveA::process_solution(vector<NodeType>& sol, int time, int poketmon_coun
 }
 
 
-void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int poketmon_counter[])
+void SolveA::backtrack(vector<NodeType>& sol, bool visited[], bool catched[], int time, int poketmon_counter[])
 {
 	vector<int> cand;
 
@@ -67,7 +71,7 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int poke
 		process_solution(sol, time, poketmon_counter);
 	else
 	{
-		construct_candidates(sol, visited, cand);
+		construct_candidates(sol, visited, catched, cand);
 		for(int i = 0; i < cand.size(); ++i)
 		{
 			NodeType cur_node;
@@ -75,14 +79,37 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int poke
 			sol.push_back(cur_node);
 			visited[cur_node.index] = true;
 			time += graph.WeightIs(sol[sol.size()-2], sol[sol.size()-1]);
-			if (cur_node.MonsterType != START_ID)
-				poketmon_counter[cur_node.MonsterType]++;
+			if (num_poketball > 0)
+			{
+				if (cur_node.MonsterType != START_ID)
+				{
+					poketmon_counter[cur_node.MonsterType]++;
+					catched[cur_node.index] = true;
+				}
+			}
+			else
+			{
+				
+			}
+			
+			
+				
 
-			backtrack(sol, visited, time, poketmon_counter);
+			backtrack(sol, visited, catched, time, poketmon_counter);
 
 			time -= graph.WeightIs(sol[sol.size()-2], sol[sol.size()-1]);
-			if (cur_node.MonsterType != START_ID)
-				poketmon_counter[cur_node.MonsterType]--;
+			if (num_poketball > 0)
+			{
+				if (cur_node.MonsterType != START_ID)
+				{
+					poketmon_counter[cur_node.MonsterType]--;
+					catched[cur_node.index] = false;
+				}
+			}
+			else
+			{
+				
+			}
 			sol.pop_back();
 			visited[cur_node.index] = false;
 		}
@@ -96,13 +123,18 @@ void SolveA::make_all_route()
 	vector<NodeType> sol;
 	sol.push_back(graph.getNodeByIndex(0));
 	bool visited[MAX_NODE];
+	bool catched[MAX_NODE];
 	visited[0] = true;
+	catched[0] = true;
 	for(int i = 1; i < MAX_NODE; ++i)
 		visited[i] = false;
+	for(int i = 1; i < MAX_NODE; ++i)
+		catched[i] = false;
 	specificTime = 0;
 	for(int i = 0; i < NUM_ID; ++i)
 		poketmon_counter[i]  = 0;
-	backtrack(sol, visited, specificTime, poketmon_counter);
+	num_poketball = 2;
+	backtrack(sol, visited, catched, specificTime, poketmon_counter);
 }
 
 void SolveA::find_solution()
