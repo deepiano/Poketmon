@@ -1,37 +1,60 @@
 #include "SolveA.h"
 
-int test5[5][5] =
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int** test;
+GraphType g;
+
+void setTest()
 {
-	{0, 1, 1, 1, 0},
-	{1, 0, 1, 0, 0},
-	{1, 1, 0, 1, 1},
-	{1, 0, 1, 0, 1},
-	{0, 0, 1, 1, 0}
-};
 
+	ifstream fileIn;
+	fileIn.open("test.txt");
+	if(!fileIn)
+	{
+		cerr << "test.txt error" << endl;
+		exit(100);
+	}
 
+	test = new int*[5];
+	for(int i = 0; i < 5; ++i)
+	{
+		test[i] = new int[5];
+	}
+
+	cout << "adjMatrix : " << endl;
+	for(int i = 0; i < 5; ++i)
+	{
+		for(int j = 0; j < 5; ++j)
+		{
+			fileIn >> test[i][j];
+			cout << test[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+
+	
+	int node_index;
+	int place_id;
+	NodeType* node_list = new NodeType[5];
+	for(int i = 0; i < 5; ++i)
+	{
+		fileIn >> node_index >> place_id;
+		node_list[i].index = node_index;
+		node_list[i].MonsterType = place_id;
+	}
+
+	g.setGraphType(test, node_list, 5);
+}
 
 int main()
 {
+	cout << "***Test***" << endl << endl;
 	SolveA solveA;
-
-	//cout<<"How many?: ";
-	int n = 5;
-	int **test = new int*[n];
-	for(int i = 0; i < n; ++i)
-	{
-		test[i] = new int[n];
-	}
-	for(int i = 0; i < n; ++i)
-	{
-		for(int j = 0; j < n; ++j)
-		{
-			test[i][j] = test5[i][j];
-		}
-	}
-
-	GraphType g(test, n);
-
+	setTest();
 	solveA.setGraph(g);
 	solveA.find_solution();
 }

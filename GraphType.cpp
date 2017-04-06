@@ -34,20 +34,24 @@ GraphType::GraphType(int n)
 	nodeCount=n;
 }
 
-GraphType::GraphType(int** test, int n)
+GraphType::~GraphType()
+{
+}
+
+void GraphType::setGraphType(int** adjMatrix, NodeType* node_list, int n)
 {
 	nodeList=new NodeType[n];
 
-	AdjMatrix=new int* [n];
+	this->AdjMatrix=new int* [n];
 	for(int i=0;i<n;i++)
 	{
-		AdjMatrix[i]=new int[n];
+		this->AdjMatrix[i]=new int[n];
 	}
 	for(int i=0;i<n;i++)
 	{
 		for(int j=0;j<n;j++)
 		{
-			AdjMatrix[i][j]=test[i][j];
+			this->AdjMatrix[i][j]=adjMatrix[i][j];
 		}
 	}
 	for(int i=0;i<n;i++)
@@ -55,10 +59,11 @@ GraphType::GraphType(int** test, int n)
 		nodeList[i].index=i;
 	}
 	nodeCount=n;
-}
 
-GraphType::~GraphType()
-{
+	for(int i = 0; i < n; ++i)
+	{
+		this->nodeList[i].MonsterType = node_list[i].MonsterType;
+	}
 }
 
 bool GraphType::IsAdjacent(NodeType first,NodeType second)

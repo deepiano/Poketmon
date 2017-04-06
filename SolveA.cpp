@@ -5,6 +5,11 @@ void SolveA::setGraph(GraphType graph)
 	this->graph = graph;
 }
 
+void SolveA::setProblemA(int specificTime, int specific_poketmon_id)
+{
+	this->specificTime = specificTime;
+	this->specific_poketmon_id = specific_poketmon_id;
+}
 
 vector<Route> SolveA::getSolutionA()
 {
@@ -12,26 +17,21 @@ vector<Route> SolveA::getSolutionA()
 }
 
 
-void SolveA::setProblemA(int specificTime, int specific_poketmon_id)
-{
-	this->specificTime = specificTime;
-	this->specific_poketmon_id = specific_poketmon_id;
-}
-
 // sol : route
 // 처음 노드와 마지막 노드가 같은지 확인( 처음 장소로 돌아왔는지)
 bool SolveA::promising(vector<NodeType>& sol)
 {
 	if (sol.size() == 1) return false;
-	if (sol.back().index == 0)
+	if (sol.back().MonsterType == START_ID)
 	{
 		return true;
 	}
 	return false;
 }
 
+
 // 방문하지 않은 노드만 방문하도록 후보를 만든다.
-void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand)
+void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], bool catched[], vector<int>& cand)
 {
 	vector<int> adj;
 
@@ -40,9 +40,14 @@ void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], vector<
 
 	for(int i = 0; i < adj.size(); ++i)
 	{
-		if(adj[i] == 0) cand.push_back(0);
-		else if(!visited[adj[i]]) 
-			cand.push_back(adj[i]);
+		NodeType cur_node = graph.getNodeByIndex(adj[i]);
+		if (cur_node.MonsterType == START_ID) cand.push_back(cur_node.index);
+		if (num_poketball > 0)
+			if (!catched[adj[i]])
+				cand.push_back(adj[i]);
+		else
+			if (!visited[adj[i]])
+				cand.push_back(adj[i]);
 	}
 }
 
@@ -52,13 +57,13 @@ void SolveA::process_solution(vector<NodeType>& sol, int time, int poketmon_coun
 	Route cur_route;
 	cur_route.route = sol;
 	cur_route.time = time;
-	for(int i = 0; i < NUM_POKETMON; ++i)
+	for(int i = 0; i < NUM_ID; ++i)
 		cur_route.poketmon_counter[i] = poketmon_counter[i];
 	all_routes.push_back(cur_route);
 }
 
 
-void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int poketmon_counter[])
+void SolveA::backtrack(vector<NodeType>& sol, bool visited[], bool catched[], int time, int poketmon_counter[])
 {
 	vector<int> cand;
 
@@ -66,24 +71,47 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int poke
 		process_solution(sol, time, poketmon_counter);
 	else
 	{
-		construct_candidates(sol, visited, cand);
+		construct_candidates(sol, visited, catched, cand);
 		for(int i = 0; i < cand.size(); ++i)
 		{
-			NodeType cand_Node;
-			cand_Node.index = cand[i];
-			sol.push_back(cand_Node);
-			visited[cand[i]] = true;
+			NodeType cur_node;
+			cur_node = graph.getNodeByIndex(cand[i]);
+			sol.push_back(cur_node);
+			visited[cur_node.index] = true;
 			time += graph.WeightIs(sol[sol.size()-2], sol[sol.size()-1]);
-			if(cand[i] != 0 )
-				poketmon_counter[cand[i]]++;
+			if (num_poketball > 0)
+			{
+				if (cur_node.MonsterType != START_ID)
+				{
+					poketmon_counter[cur_node.MonsterType]++;
+					catched[cur_node.index] = true;
+				}
+			}
+			else
+			{
+				
+			}
+			
+			
+				
 
-			backtrack(sol, visited, time, poketmon_counter);
+			backtrack(sol, visited, catched, time, poketmon_counter);
 
 			time -= graph.WeightIs(sol[sol.size()-2], sol[sol.size()-1]);
-			if(cand[i] != 0 )
-				poketmon_counter[cand[i]]--;
+			if (num_poketball > 0)
+			{
+				if (cur_node.MonsterType != START_ID)
+				{
+					poketmon_counter[cur_node.MonsterType]--;
+					catched[cur_node.index] = false;
+				}
+			}
+			else
+			{
+				
+			}
 			sol.pop_back();
-			visited[cand[i]] = false;
+			visited[cur_node.index] = false;
 		}
 	}
 }
@@ -95,13 +123,18 @@ void SolveA::make_all_route()
 	vector<NodeType> sol;
 	sol.push_back(graph.getNodeByIndex(0));
 	bool visited[MAX_NODE];
+	bool catched[MAX_NODE];
 	visited[0] = true;
+	catched[0] = true;
 	for(int i = 1; i < MAX_NODE; ++i)
 		visited[i] = false;
+	for(int i = 1; i < MAX_NODE; ++i)
+		catched[i] = false;
 	specificTime = 0;
-	for(int i = 0; i < NUM_POKETMON; ++i)
+	for(int i = 0; i < NUM_ID; ++i)
 		poketmon_counter[i]  = 0;
-	backtrack(sol, visited, specificTime, poketmon_counter);
+	num_poketball = 2;
+	backtrack(sol, visited, catched, specificTime, poketmon_counter);
 }
 
 void SolveA::find_solution()
@@ -116,12 +149,14 @@ void SolveA::find_solution()
 			cout << all_routes[i].route[j].index << " ";
 		}
 		cout << endl;
-		/*cout << "Poketmon counter of Route " << i << " : ";
-		for(int j = 0; j < NUM_POKETMON; ++j)
+		cout << "Poketmon counter of Route :" << endl;
+		for(int j = 0; j < NUM_ID; ++j)
 		{
 			cout << "[" << j << "]" << all_routes[i].poketmon_counter[j] << " ";
-		}*/
+		}
+		cout << endl;
 		cout << "Time of Route : " << all_routes[i].time;
+		cout << endl;
 		cout << endl;
 	}
 
