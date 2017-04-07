@@ -3,6 +3,7 @@
 void SolveA::setGraph(GraphType graph)
 {
 	this->graph = graph;
+	this->map_of_id_to_node = graph.getMap();
 }
 
 void SolveA::setProblemA(int specific_time, int specific_poketmon_id)
@@ -132,3 +133,19 @@ void SolveA::find_solution()
 }
 
 
+void SolveA::check_for_home(vector<NodeType>& route, int& time)
+{
+
+}
+
+
+void SolveA::search_nodes_by_id(int id, vector<NodeType>& node_list)
+{
+	node_list = map_of_id_to_node[id];
+}
+
+
+void SolveA::find_shortest_path(NodeType destination, vector<NodeType>& route, int& time)
+{
+	
+}

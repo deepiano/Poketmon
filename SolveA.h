@@ -45,10 +45,10 @@ public:
 
 	void find_solution();
 
+	void check_for_home(vector<NodeType>& route, int& time);
 	void search_nodes_by_id(int id, vector<NodeType>& node_list);
 	void find_shortest_path(NodeType destination, vector<NodeType>& route, int& time);
-	void check_for_home(vector<NodeType>& route, int& time);
-	bool can_catch_poketmon();
+	
 
 private:
 	vector<Route> all_solution_routes;
