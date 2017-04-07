@@ -5,10 +5,11 @@ void SolveA::setGraph(GraphType graph)
 	this->graph = graph;
 }
 
-void SolveA::setProblemA(int specificTime, int specific_poketmon_id)
+void SolveA::setProblemA(int specific_time, int specific_poketmon_id)
 {
-	this->specificTime = specificTime;
+	this->specific_time = specific_time;
 	this->specific_poketmon_id = specific_poketmon_id;
+	this->num_poketball = 2;
 }
 
 vector<Route> SolveA::getSolutionA()
@@ -18,7 +19,7 @@ vector<Route> SolveA::getSolutionA()
 
 
 // sol : route
-// Ã³À½ ³ëµå¿Í ¸¶Áö¸· ³ëµå°¡ °°ÀºÁö È®ÀÎ( Ã³À½ Àå¼Ò·Î µ¹¾Æ¿Ô´ÂÁö)
+// Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½å°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½( Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½Ò·ï¿½ ï¿½ï¿½ï¿½Æ¿Ô´ï¿½ï¿½ï¿½)
 bool SolveA::promising(vector<NodeType>& sol)
 {
 	if (sol.size() == 1) return false;
@@ -30,24 +31,26 @@ bool SolveA::promising(vector<NodeType>& sol)
 }
 
 
-// ¹æ¹®ÇÏÁö ¾ÊÀº ³ëµå¸¸ ¹æ¹®ÇÏµµ·Ï ÈÄº¸¸¦ ¸¸µç´Ù.
-void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand)
+// ï¿½æ¹®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½å¸¸ ï¿½æ¹®ï¿½Ïµï¿½ï¿½ï¿½ ï¿½Äºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
+void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], bool catched[], vector<int>& cand)
 {
 	vector<int> adj;
 
-	// ÇöÀç ±îÁöÀÇ °æ·Î Áß ¸¶Áö¸· ³ëµåÀÇ ÀÎÁ¢ ³ëµå vector
-	adj = graph.getAdjacent(sol.back());	 // ÀÎÁ¢³ëµå ¹Þ±â
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ vector
+	adj = graph.getAdjacent(sol.back());	 // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ±ï¿½
 
 	for(int i = 0; i < adj.size(); ++i)
 	{
 		NodeType cur_node = graph.getNodeByIndex(adj[i]);
 		if (cur_node.MonsterType == START_ID) cand.push_back(cur_node.index);
-		else if(!visited[adj[i]]) 
+		else if (num_poketball == 0 && !catched[adj[i]]) 
+			cand.push_back(adj[i]);
+		else if (num_poketball > 0 && !visited[adj[i]])
 			cand.push_back(adj[i]);
 	}
 }
 
-// ¿Ï¼ºµÈ ÇÑ cur_route(È¸·Î)¸¦ all_route¿¡ Ãß°¡ÇÑ´Ù.
+// ï¿½Ï¼ï¿½ï¿½ï¿½ ï¿½ï¿½ cur_route(È¸ï¿½ï¿½)ï¿½ï¿½ all_routeï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ñ´ï¿½.
 void SolveA::process_solution(vector<NodeType>& sol, int time, int poketmon_counter[])
 {
 	Route cur_route;
@@ -59,7 +62,7 @@ void SolveA::process_solution(vector<NodeType>& sol, int time, int poketmon_coun
 }
 
 
-void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int poketmon_counter[])
+void SolveA::backtrack(vector<NodeType>& sol, bool visited[], bool catched[], int time, int poketmon_counter[])
 {
 	vector<int> cand;
 
@@ -67,42 +70,57 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int poke
 		process_solution(sol, time, poketmon_counter);
 	else
 	{
-		construct_candidates(sol, visited, cand);
+		construct_candidates(sol, visited, catched, cand);
 		for(int i = 0; i < cand.size(); ++i)
 		{
 			NodeType cur_node;
 			cur_node = graph.getNodeByIndex(cand[i]);
 			sol.push_back(cur_node);
-			visited[cur_node.index] = true;
 			time += graph.WeightIs(sol[sol.size()-2], sol[sol.size()-1]);
-			if (cur_node.MonsterType != START_ID)
+			// cout << "cur_index : " << cur_node.index << endl;
+			visited[cur_node.index] = true;
+			if(num_poketball != 0 && cur_node.MonsterType != START_ID)
+			{
+				catched[cur_node.index] = true;
 				poketmon_counter[cur_node.MonsterType]++;
+				num_poketball--;
+				// cout << "num_poketball : " << num_poketball << endl;
+			}
+			backtrack(sol, visited, catched, time, poketmon_counter);
 
-			backtrack(sol, visited, time, poketmon_counter);
-
-			time -= graph.WeightIs(sol[sol.size()-2], sol[sol.size()-1]);
-			if (cur_node.MonsterType != START_ID)
-				poketmon_counter[cur_node.MonsterType]--;
-			sol.pop_back();
 			visited[cur_node.index] = false;
+			if(num_poketball != 0 && cur_node.MonsterType != START_ID)
+			{
+				catched[cur_node.index] = false;
+				poketmon_counter[cur_node.MonsterType]--;
+				num_poketball++;
+			}
+			time -= graph.WeightIs(sol[sol.size()-2], sol[sol.size()-1]);
+			sol.pop_back();
+			
 		}
 	}
 }
 
 
-// ¸ðµç È¸·Î¸¦ ¸¸µç´Ù.
+// ï¿½ï¿½ï¿½ï¿½ È¸ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 void SolveA::make_all_route()
 {
 	vector<NodeType> sol;
 	sol.push_back(graph.getNodeByIndex(0));
 	bool visited[MAX_NODE];
+	bool catched[MAX_NODE];
 	visited[0] = true;
 	for(int i = 1; i < MAX_NODE; ++i)
 		visited[i] = false;
-	specificTime = 0;
+	catched[0] = true;
+	for(int i = 1; i < MAX_NODE; ++i)
+		catched[i] = false;
+	specific_time = 0;
 	for(int i = 0; i < NUM_ID; ++i)
 		poketmon_counter[i]  = 0;
-	backtrack(sol, visited, specificTime, poketmon_counter);
+	num_poketball = 2;
+	backtrack(sol, visited, catched, specific_time, poketmon_counter);
 }
 
 void SolveA::find_solution()
@@ -133,7 +151,7 @@ void SolveA::find_solution()
 	for(int i = 0; i < all_routes.size(); ++i)
 	{
 		if(all_routes[i].poketmon_counter[specific_poketmon_id] > big
-			&& all_routes[i].time <= specificTime)
+			&& all_routes[i].time <= specific_time)
 		{	
 			big = all_routes[i].poketmon_counter[specific_poketmon_id];
 			big_route_index = i;

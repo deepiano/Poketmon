@@ -1,4 +1,3 @@
-#pragma once
 #include "GraphType.h"
 #include <iostream>
 #include <stack>
@@ -24,15 +23,18 @@ class SolveA
 {
 public:
 	void setGraph(GraphType graph);
-	void setProblemA(int specificTime, int specific_poketmon_id);
+	void setProblemA(int specific_time, int specific_poketmon_id);
 
 	vector<Route> getSolutionA();
 	
-	void backtrack(vector<NodeType>& sol, bool visited[], int time, int poketmon_counter[]);
+	void backtrack(vector<NodeType>& sol, bool visited[], bool catched[], int time, int poketmon_counter[]);
 	bool promising(vector<NodeType>& sol);
-	void construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand);
+	void construct_candidates(vector<NodeType>& sol, bool visited[], bool catched[], vector<int>& cand);
 	void process_solution(vector<NodeType>& sol, int time, int poketmon_counter[]);
 	void make_all_route();
+
+
+
 
 	void find_solution();
 
@@ -41,7 +43,8 @@ private:
 	GraphType graph;
 	int poketmon_counter[NUM_ID];
 
-	int specificTime;
+	int specific_time;
 	int specific_poketmon_id;
+	int num_poketball;
 };
 
