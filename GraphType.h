@@ -1,3 +1,6 @@
+#ifndef _GRAPHTYPE_H_
+#define _GRAPHTYPE_H_
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -37,3 +40,5 @@ public:
 	int getNodeCount();//���� ���� �� ����.
 
 };
+
+#endif

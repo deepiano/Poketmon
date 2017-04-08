@@ -68,9 +68,9 @@ void GraphType::setGraphType(int** adjMatrix, NodeType* node_list, int n)
 
 bool GraphType::IsAdjacent(NodeType first,NodeType second)
 {
-	vector<int> adjFirst=getAdjacent(first);//first ³ëµåÀÇ ÀÎÁ¢ÇÑ ³ëµå ¸ñ·ÏÀ» ¹Þ¾Æ¿È.
+	vector<int> adjFirst=getAdjacent(first);//first ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½.
 	if(find(adjFirst.begin(),adjFirst.end(),second.index)!=adjFirst.end())
-	{// firstÀÇ ÀÎÁ¢ ³ëµå ¸ñ·Ï¿¡ second°¡ ÀÖ´ÂÁö °Ë»çÇØ¼­ ÀÖÀ¸¸é true, ¾øÀ¸¸é false ¸®ÅÏ
+	{// firstï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ secondï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ true, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ false ï¿½ï¿½ï¿½ï¿½
 		return true;
 	}
 	else 
@@ -123,3 +123,4 @@ int GraphType::getNodeCount()
 {
 	return nodeCount;
 }
+

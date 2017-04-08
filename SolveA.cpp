@@ -3,7 +3,7 @@
 void SolveA::setGraph(GraphType graph)
 {
 	this->graph = graph;
-	this->map_of_id_to_node = graph.getMap();
+	//this->map_of_id_to_node = graph.getMap();
 }
 
 void SolveA::setProblemA(int specific_time, int specific_poketmon_id)
@@ -20,18 +20,21 @@ vector<Route> SolveA::getSolutionA()
 
 
 // ó�� ������ ������ ���尡 ������ Ȯ��( ó�� ���ҷ� ���ƿԴ���)
-bool SolveA::promising(vector<NodeType>& sol, int time)
+bool SolveA::promising(vector<NodeType>& sol, bool visited[], int time)
 {
 	if (time >= specific_time) return false;
-	check_for_home(sol, time);
+	vector<NodeType> test_sol = sol;
+	check_for_home(test_sol, time);
 	if (time > specific_time) return false;
 
 	vector<NodeType> node_list;
 	search_nodes_by_id(specific_poketmon_id, node_list);
-	if (node_list.empty())
-		return true;
-	else
-		return false;
+
+	for(int i = 0; i < node_list.size(); ++i)
+		if(visited[node_list[i].index] == false)
+			return false;
+
+	return true;
 }
 
 
@@ -66,11 +69,11 @@ void SolveA::process_solution(vector<NodeType>& sol, int time, int num_catch_pok
 }
 
 
-void SolveA::backtrack(vector<NodeType>& sol, bool visited[], bool catched[], int time, int num_catch_poketmon)
+void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon)
 {
 	vector<int> cand;
 
-	if ( promising(sol, time) )
+	if ( promising(sol, visited, time) )
 		process_solution(sol, time, num_catch_poketmon);
 	else
 	{
@@ -84,7 +87,7 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], bool catched[], in
 		{
 			NodeType destination;
 			destination = graph.getNodeByIndex(cand[i]);
-			vector<Route> test_sol = sol;
+			vector<NodeType> test_sol = sol;
 			int test_time = time;
 			find_shortest_path(destination, test_sol, test_time);
 			visited[destination.index] = true;
@@ -135,17 +138,23 @@ void SolveA::find_solution()
 
 void SolveA::check_for_home(vector<NodeType>& route, int& time)
 {
-
+	NodeType destination;
+	destination.index = START_VERTEX;
+	find_shortest_path(destination, route, time);
 }
 
 
 void SolveA::search_nodes_by_id(int id, vector<NodeType>& node_list)
 {
-	node_list = map_of_id_to_node[id];
+	node_list = this->map_of_poketmon_id_to_node[id];
 }
 
 
 void SolveA::find_shortest_path(NodeType destination, vector<NodeType>& route, int& time)
 {
-	
+	int num_vertex = this->graph.getNodeCount();
+	int** adj = this->graph.getAdjMatrix();
+	int start = route.back().index;
+	int end = destination.index;
+	Dijkstra(num_vertex, adj, start, end, route, time);
 }

@@ -1,4 +1,4 @@
-OBJS = GraphType.o SolveA.o main.o
+OBJS = GraphType.o ShortestPath.o SolveA.o main.o
 CC = g++
 DEBUG = -g
 CFLAGS = -Wall -c $(DEBUG)
@@ -12,6 +12,9 @@ main.o: main.cpp SolveA.h
 
 SolveA.o: SolveA.h SolveA.cpp GraphType.h 
 	$(CC) $(CFLAGS) SolveA.cpp
+
+ShortestPath.o: ShortestPath.h ShortestPath.cpp GraphType.h
+	$(CC) $(CFLAGS) ShortestPath.cpp
 
 GraphType.o: GraphType.h GraphType.cpp
 	$(CC) $(CFLAGS) GraphType.cpp
