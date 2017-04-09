@@ -6,36 +6,42 @@
 using namespace std;
 
 
-// struct NodeTypeÀº °¢ ±×·¡ÇÁÀÇ ³ëµå ÇüÅÂ¸¦ Á¤ÀÇÇÏ´Â ±¸Á¶Ã¼ÀÌ´Ù.
+// struct NodeTypeì€ ê° ê·¸ë˜í”„ì˜ ë…¸ë“œ í˜•íƒœë¥¼ ì •ì˜í•˜ëŠ” êµ¬ì¡°ì²´ì´ë‹¤.
 struct NodeType 
 {
-	int MonsterType; // °¢ ³ëµåÀÇ Å¸ÀÔ. 0~11±îÁö Á¸ÀçÇÏ¸ç, 0Àº ½ÃÀÛÁ¡, 11Àº Æ÷ÄÏ½ºÅ¾°ú °°ÀÌ Æ¯Á¤ ¹øÈ£´Â Æ¯Á¤ ÁöÁ¡À» ³ªÅ¸³¿.
-	int index;// ³ëµåÀÇ ¹øÈ£ÀÌÀÚ ÀÎÁ¢Çà·Ä¿¡¼­ÀÇ ÀÎµ¦½º ¹øÈ£.
+	int MonsterType; // ê° ë…¸ë“œì˜ íƒ€ì…. 0~11ê¹Œì§€ ì¡´ì¬í•˜ë©°, 0ì€ ì‹œì‘ì , 11ì€ í¬ì¼“ìŠ¤íƒ‘ê³¼ ê°™ì´ íŠ¹ì • ë²ˆí˜¸ëŠ” íŠ¹ì • ì§€ì ì„ ë‚˜íƒ€ëƒ„.
+	int index;// ë…¸ë“œì˜ ë²ˆí˜¸ì´ì ì¸ì ‘í–‰ë ¬ì—ì„œì˜ ì¸ë±ìŠ¤ ë²ˆí˜¸.
 	bool operator==(NodeType rhs);
 };
 
 class GraphType
 {
 private:
-	NodeType* nodeList;// ±×·¡ÇÁ°¡ °¡Áø ÀüÃ¼ ³ëµåÀÇ ¸®½ºÆ®.
-	int** AdjMatrix;// ±×·¡ÇÁÀÇ ¿¬°á »óÅÂ¸¦ ³ªÅ¸³»´Â ÀÎÁ¢Çà·Ä.
-	int nodeCount;// ±×·¡ÇÁÀÇ ÇöÀç ³ëµå ¼ö.
+	NodeType* nodeList;// ê·¸ë˜í”„ê°€ ê°€ì§„ ì „ì²´ ë…¸ë“œì˜ ë¦¬ìŠ¤íŠ¸.
+	int** AdjMatrix;// ê·¸ë˜í”„ì˜ ì—°ê²° ìƒíƒœë¥¼ ë‚˜íƒ€ë‚´ëŠ” ì¸ì ‘í–‰ë ¬.
+	int nodeCount;// ê·¸ë˜í”„ì˜ í˜„ì¬ ë…¸ë“œ ìˆ˜.
+	Vector<Vector<int>> mappingTable; // Mapping Table.
 
 public:
 	GraphType();
-	GraphType(int n);// ¿øÇÏ´Â ³ëµå ¼ö¸¦ ÀÔ·ÂÇØ ±×·¡ÇÁ¸¦ »ı¼ºÇÏ´Â »ı¼ºÀÚ.
+	GraphType(int n);// ì›í•˜ëŠ” ë…¸ë“œ ìˆ˜ë¥¼ ì…ë ¥í•´ ê·¸ë˜í”„ë¥¼ ìƒì„±í•˜ëŠ” ìƒì„±ì.
 	GraphType(int** adjMatrix, NodeType* node_list, int n);
 	~GraphType();
 
 	void setGraphType(int** adjMatrix, NodeType* node_list, int n);
 
-	bool IsAdjacent(NodeType first, NodeType second);// µÎ ³ëµå°¡ ÀÎÁ¢ÇØ ÀÖ´ÂÁö Ã¼Å©.
-	int WeightIs(NodeType first,NodeType second);// µÎ ³ëµå »çÀÌÀÇ °¡ÁßÄ¡(¿©±â¼­´Â ¼Ò¿ä ½Ã°£)¸¦ Ã¼Å©
-	vector<int> getAdjacent(NodeType target);// Æ¯Á¤ ³ëµå¿Í ÀÎÁ¢ÇØ ÀÖ´Â ¸ğµç ³ëµå¸¦ º¤ÅÍ¿¡ ´ã¾Æ ¸®ÅÏ
+	bool IsAdjacent(NodeType first, NodeType second);// ë‘ ë…¸ë“œê°€ ì¸ì ‘í•´ ìˆëŠ”ì§€ ì²´í¬.
+	int WeightIs(NodeType first,NodeType second);// ë‘ ë…¸ë“œ ì‚¬ì´ì˜ ê°€ì¤‘ì¹˜(ì—¬ê¸°ì„œëŠ” ì†Œìš” ì‹œê°„)ë¥¼ ì²´í¬
+	vector<int> getAdjacent(NodeType target);// íŠ¹ì • ë…¸ë“œì™€ ì¸ì ‘í•´ ìˆëŠ” ëª¨ë“  ë…¸ë“œë¥¼ ë²¡í„°ì— ë‹´ì•„ ë¦¬í„´
 
-	NodeType* getNodeList();// ¸ğµç ³ëµå ¸®½ºÆ® ¸®ÅÏ
-	NodeType getNodeByIndex(int idx);// ÀÎµ¦½º¸¦ ¹Ş¾Æ ÇØ´ç ÀÎµ¦½ºÀÇ ³ëµå ¸®ÅÏ.
-	int** getAdjMatrix();// ÀÎÁ¢Çà·Ä ¸®ÅÏ.
-	int getNodeCount();//ÇöÀç ³ëµå ¼ö ¸®ÅÏ.
+	NodeType* getNodeList();// ëª¨ë“  ë…¸ë“œ ë¦¬ìŠ¤íŠ¸ ë¦¬í„´
+	NodeType getNodeByIndex(int idx);// ì¸ë±ìŠ¤ë¥¼ ë°›ì•„ í•´ë‹¹ ì¸ë±ìŠ¤ì˜ ë…¸ë“œ ë¦¬í„´.
+	int** getAdjMatrix();// ì¸ì ‘í–‰ë ¬ ë¦¬í„´.
+	int getNodeCount();//í˜„ì¬ ë…¸ë“œ ìˆ˜ ë¦¬í„´.
+	void AddToAdj(int num,int row,int col);// AdjMatrix[row][col]ì˜ ê°’ì„ numìœ¼ë¡œ ì„¤ì •. ë‹¤ë¥¸ ì¸ì ‘í–‰ë ¬ ê°’ ì„¤ì • ë°©ë²•ì„ ì°¾ìœ¼ë©´ ì œê±° ì˜ˆì •.
+    	void AddNodeToMpTable(NodeType nod);// Mapping Tableì— ë…¸ë“œ ì¶”ê°€
+   	void ChangeNodeType(int idx,int type);//nodeListì˜ idx ì¸ë±ìŠ¤ì˜ íƒ€ì…ì„ typeìœ¼ë¡œ ë³€ê²½
+    	void MakeMappingTable();//Mapping Tableì„ ë§Œë“œëŠ” í•¨ìˆ˜ë¡œ AddNodeToMpTableì„ í˜¸ì¶œí•´ ì‚¬ìš©.
+	
 
 };
