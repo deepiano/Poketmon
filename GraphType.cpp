@@ -124,3 +124,76 @@ int GraphType::getNodeCount()
 	return nodeCount;
 }
 
+void GraphType::AddToAdj(int num, int row, int col)
+{
+    *(*(AdjMatrix+row)+col)=num;
+}
+
+void GraphType::AddNodeToMpTable(NodeType nod)
+{
+    mappingTable[nod.MonsterType].push_back(nod.index);
+}
+
+void GraphType::ChangeNodeType(int idx, int type)
+{
+    nodeList[idx].MonsterType=type;
+}
+void GraphType::MakeMappingTable()
+{
+    for(int i=0;i<nodeCount;i++)
+    {
+        AddNodeToMpTable(nodeList[i]);
+    }
+}
+/*
+ loadInputfile();
+    loadPlacefile();
+    g->MakeMappingTable();//Main함수에서의 파일 로드 및 초기화방식
+    */
+/*
+void MainWindow::loadInputfile()
+{
+
+    QFile file("input.txt");
+    if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
+    {
+       return;
+    }
+    QTextStream in(&file);
+    QString inp;
+    while(!in.atEnd())
+    {
+        for(int i=0;i<g->getNodeCount();i++)
+        {
+            for(int j=0;j<g->getNodeCount();j++)
+            {
+                 in>>inp;
+                 g->AddToAdj(inp.toInt(),i,j);
+            }
+        }
+
+
+    }
+    file.close();
+}
+
+void MainWindow::loadPlacefile()
+{
+    QFile file("placeinput.txt");
+    if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
+    {
+        return;
+    }
+    QTextStream in(&file);
+    QString nodnum;
+    QString montype;
+    while(!in.atEnd())
+    {
+        in>>nodnum;
+        in>>montype;
+        g->ChangeNodeType(nodnum.toInt(),montype.toInt());
+
+    }
+    file.close();
+}
+*/
