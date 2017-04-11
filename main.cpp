@@ -58,6 +58,10 @@ int main()
 	SolveA solveA;
 	setTest();
 	solveA.setGraph(g);
+	int spec_time, spec_poketmon_id;
+	cout << "특정 시간 입력: "; cin >> spec_time;
+	cout << "특정 포켓몬 입력: "; cin >> spec_poketmon_id;
+	solveA.setProblemA(spec_time, spec_poketmon_id);
 	solveA.find_solution();
 }
 

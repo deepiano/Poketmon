@@ -27,6 +27,6 @@ struct Comp
 };
 
 
-void Dijkstra(int num_vertex, int** adj, int start, int end, vector<NodeType>& route, int& time);	// 거리 벡터 채우기
+void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, vector<NodeType>& route, int& time);	// 거리 벡터 채우기
 
 #endif

@@ -1,6 +1,6 @@
 #include "ShortestPath.h"
 
-void Dijkstra(int num_vertex, int** adj, int start, int end, vector<NodeType>& route, int& time)
+void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, vector<NodeType>& route, int& time)
 {
 	priority_queue<DistanceContainer, vector<DistanceContainer>, Comp> pq;
 	struct DistanceContainer c;
@@ -66,7 +66,7 @@ void Dijkstra(int num_vertex, int** adj, int start, int end, vector<NodeType>& r
         st.pop();   // 시작 버텍스는 제외
 		while(!st.empty())
 		{
-            route.push_back(st.top());
+            route.push_back(graph->getNodeByIndex(st.top()));
 			cout << st.top(); 
 			st.pop();
             if(st.size() != 0)

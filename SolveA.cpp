@@ -3,7 +3,7 @@
 void SolveA::setGraph(GraphType graph)
 {
 	this->graph = graph;
-	//this->map_of_id_to_node = graph.getMap();
+	this->map_of_id_to_node_index_list = graph.getMap();
 }
 
 void SolveA::setProblemA(int specific_time, int specific_poketmon_id)
@@ -27,11 +27,11 @@ bool SolveA::promising(vector<NodeType>& sol, bool visited[], int time)
 	check_for_home(test_sol, time);
 	if (time > specific_time) return false;
 
-	vector<NodeType> node_list;
+	vector<int> node_list;
 	search_nodes_by_id(specific_poketmon_id, node_list);
 
 	for(int i = 0; i < node_list.size(); ++i)
-		if(visited[node_list[i].index] == false)
+		if(visited[node_list[i]] == false)
 			return false;
 
 	return true;
@@ -41,20 +41,20 @@ bool SolveA::promising(vector<NodeType>& sol, bool visited[], int time)
 // �湮���� ���� ���常 �湮�ϵ��� �ĺ��� ������.
 void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand, bool can_catch_poketmon)
 {
-	vector<NodeType> node_list;
+	vector<int> node_list;
 	if (can_catch_poketmon)
 	{
-		node_list = map_of_id_to_node[specific_poketmon_id];
+		node_list = map_of_id_to_node_index_list[specific_poketmon_id];
 	}
 	else
 	{
-		node_list = map_of_id_to_node[POKETSTOP_ID];
+		node_list = map_of_id_to_node_index_list[POKETSTOP_ID];
 	}
 
 	for(int i = 0; i < node_list.size(); ++i)
 	{
-		if (!visited[node_list[i].index])
-			cand.push_back(node_list[i].index);
+		if (!visited[node_list[i]])
+			cand.push_back(node_list[i]);
 	}
 }
 
@@ -144,9 +144,9 @@ void SolveA::check_for_home(vector<NodeType>& route, int& time)
 }
 
 
-void SolveA::search_nodes_by_id(int id, vector<NodeType>& node_list)
+void SolveA::search_nodes_by_id(int id, vector<int>& node_list)
 {
-	node_list = this->map_of_poketmon_id_to_node[id];
+	node_list = this->map_of_id_to_node_index_list[id];
 }
 
 
@@ -156,5 +156,5 @@ void SolveA::find_shortest_path(NodeType destination, vector<NodeType>& route, i
 	int** adj = this->graph.getAdjMatrix();
 	int start = route.back().index;
 	int end = destination.index;
-	Dijkstra(num_vertex, adj, start, end, route, time);
+	Dijkstra(&graph, num_vertex, adj, start, end, route, time);
 }

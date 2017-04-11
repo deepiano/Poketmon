@@ -48,15 +48,14 @@ public:
 	void find_solution();
 
 	void check_for_home(vector<NodeType>& route, int& time);
-	void search_nodes_by_id(int id, vector<NodeType>& node_list);
+	void search_nodes_by_id(int id, vector<int>& node_list);
 	void find_shortest_path(NodeType destination, vector<NodeType>& route, int& time);
 	
 
 private:
 	vector<Route> all_solution_routes;
 	GraphType graph;
-	vector<vector<NodeType>> map_of_id_to_node;
-
+	vector<vector<int>> map_of_id_to_node_index_list;	// map(Poketmon_id -> node_index_list)
 	int specific_time;
 	int specific_poketmon_id;
 	int num_poketball;

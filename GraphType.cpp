@@ -32,6 +32,7 @@ GraphType::GraphType(int n)
 		nodeList[i].index=i;
 	}
 	nodeCount=n;
+	this->mappingTable.resize(12);
 }
 
 GraphType::~GraphType()
@@ -56,7 +57,7 @@ void GraphType::setGraphType(int** adjMatrix, NodeType* node_list, int n)
 	}
 	for(int i=0;i<n;i++)
 	{
-		nodeList[i].index=i;
+		this->nodeList[i].index=i;
 	}
 	nodeCount=n;
 
@@ -64,6 +65,10 @@ void GraphType::setGraphType(int** adjMatrix, NodeType* node_list, int n)
 	{
 		this->nodeList[i].MonsterType = node_list[i].MonsterType;
 	}
+
+	this->mappingTable.resize(12);
+
+	MakeMappingTable();
 }
 
 bool GraphType::IsAdjacent(NodeType first,NodeType second)
@@ -144,6 +149,11 @@ void GraphType::MakeMappingTable()
     {
         AddNodeToMpTable(nodeList[i]);
     }
+}
+
+vector<vector<int>> GraphType::getMap()
+{
+	return mappingTable;
 }
 /*
  loadInputfile();
