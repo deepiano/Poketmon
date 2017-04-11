@@ -38,7 +38,7 @@ public:
 	NodeType* getNodeList();// ���� ���� ����Ʈ ����
 	NodeType getNodeByIndex(int idx);// �ε����� �޾� �ش� �ε����� ���� ����.
 	int** getAdjMatrix();// �������� ����.
-	int getNodeCount();//���� ���� �� ����.
+	int getNodeCount();//���� ���� �� ����
 	
 	void AddToAdj(int num,int row,int col);// AdjMatrix[row][col]의 값을 num으로 설정. 다른 인접행렬 값 설정 방법을 찾으면 제거 예정.
     	void AddNodeToMpTable(NodeType nod);// Mapping Table에 노드 추가
