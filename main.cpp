@@ -63,8 +63,8 @@ int main()
 	// cin >> spec_time;
 	// cout << "Enter specific poketmon_id: "; 
 	// cin >> spec_poketmon_id;
-	spec_time = 600;
-	spec_poketmon_id = 1;
+	spec_time = 600;		// you can change this.
+	spec_poketmon_id = 1;	// you cna change this.
 	solveA.setProblemA(spec_time, spec_poketmon_id);
 	solveA.find_solution();
 }
