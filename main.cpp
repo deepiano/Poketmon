@@ -6,7 +6,7 @@ using namespace std;
 
 const int NUM_NODE_TEST = 5;
 int** test;
-GraphType g;
+//GraphType g;
 
 void setTest()
 {
@@ -49,18 +49,22 @@ void setTest()
 		// cout << node_index << ' ' << place_id << endl;
 	}
 
-	g.setGraphType(test, node_list, NUM_NODE_TEST);
+	//g.setGraphType(test, node_list, NUM_NODE_TEST);
 }
 
 int main()
 {
-	cout << "***Test***" << endl << endl;
+	cout << "*** Test ***" << endl << endl;
 	SolveA solveA;
-	setTest();
-	solveA.setGraph(g);
+	//setTest();
+	//solveA.setGraph(g);
 	int spec_time, spec_poketmon_id;
-	cout << "특정 시간 입력: "; cin >> spec_time;
-	cout << "특정 포켓몬 입력: "; cin >> spec_poketmon_id;
+	// cout << "Enter specific time: "; 
+	// cin >> spec_time;
+	// cout << "Enter specific poketmon_id: "; 
+	// cin >> spec_poketmon_id;
+	spec_time = 600;
+	spec_poketmon_id = 1;
 	solveA.setProblemA(spec_time, spec_poketmon_id);
 	solveA.find_solution();
 }

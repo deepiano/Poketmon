@@ -39,10 +39,11 @@ public:
 	time : time
 	num_catch_poketmon : check number of catched poketmon
 	*/
-	void backtrack(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon);
-	bool promising(vector<NodeType>& sol, bool visited[], int time);
-	void construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand, bool can_catch_poketmon);
+	void backtrack(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go);
+	bool promising(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon, int limit_of_catch);
 	void process_solution(vector<NodeType>& sol, int time, int num_catch_poketmon);
+	void construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand, bool can_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go);
+	
 	void make_all_route();
 
 	void find_solution();
@@ -51,11 +52,12 @@ public:
 	void search_nodes_by_id(int id, vector<int>& node_list);
 	void find_shortest_path(NodeType destination, vector<NodeType>& route, int& time);
 	
+	void find_closest_poketstop(NodeType cur, NodeType& destination, bool visited[]);
 
 private:
 	vector<Route> all_solution_routes;
 	GraphType graph;
-	vector<vector<int>> map_of_id_to_node_index_list;	// map(Poketmon_id -> node_index_list)
+	vector<vector<int> > map_of_id_to_node_index_list;	// map(Poketmon_id -> node_index_list)
 	int specific_time;
 	int specific_poketmon_id;
 	int num_poketball;

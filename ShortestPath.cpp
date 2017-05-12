@@ -17,17 +17,16 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 	}
 	dist[start] = 0;		//시작점 처리
 	path[start] = start;	//시작점 처리
-
+	
 	while(!pq.empty())
 	{
 		struct DistanceContainer cur_container = pq.top();
 		pq.pop();
 		
 		int cur_vertex = cur_container.vertex;
-		if (cur_vertex == end) break;
 		for(int i = 0; i < num_vertex; ++i)
 		{
-			if (adj[cur_vertex][i] != 0)	// 연결 되어 있다면
+			if (adj[cur_vertex][i] > 0)	// 연결 되어 있다면
 			{
 				int cur_distance = dist[cur_vertex] + adj[cur_vertex][i];
 				if (cur_distance < dist[i])
@@ -67,12 +66,12 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 		while(!st.empty())
 		{
             route.push_back(graph->getNodeByIndex(st.top()));
-			cout << st.top(); 
+			// cout << st.top(); 
 			st.pop();
-            if(st.size() != 0)
-                cout << " -> ";
+            // if(st.size() != 0)
+            //     cout << " -> ";
 		}
-		cout << endl;
+		// cout << endl;
 	}
 	
     time += dist[end];

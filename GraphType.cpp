@@ -7,6 +7,63 @@ bool NodeType::operator==(NodeType rhs)
 
 GraphType::GraphType()
 {
+	nodeList=new NodeType[100];
+
+	this->AdjMatrix=new int* [100];
+	for(int i=0;i<100;i++)
+	{
+		this->AdjMatrix[i]=new int[100];
+	}
+
+	for(int i=0;i<100;i++)
+	{
+		this->nodeList[i].index=i;
+	}
+	nodeCount=100;
+
+	load_file();
+	
+	this->mappingTable.resize(12);
+
+	MakeMappingTable();
+}
+
+void GraphType::load_file()
+{
+	ifstream placeFile;
+	placeFile.open("Data/place.txt");
+	if(!placeFile)
+	{
+		cerr << "Error opening place.txt" << endl;
+		exit(100);
+	}
+
+	string str;
+	std::getline(placeFile, str);
+	for(int i = 0; i < 100; ++i)
+	{
+		int tmp;
+		placeFile >> tmp;
+		placeFile >> this->nodeList[i].MonsterType >> this->nodeList[i].x >> this->nodeList[i].y;
+	}
+
+	placeFile.close();
+
+	ifstream weightFile;
+	weightFile.open("Data/weight.txt");
+	if(!weightFile)
+	{
+		cerr << "Error opening weight.txt" << endl;
+		exit(100);
+	}
+
+	for(int i = 0; i < 100; ++i)
+	{
+		for(int j = 0; j < 100; ++j)
+		{
+			weightFile >> this->AdjMatrix[i][j];
+		}
+	}
 }
 
 GraphType::GraphType(int n)
@@ -151,7 +208,7 @@ void GraphType::MakeMappingTable()
     }
 }
 
-vector<vector<int>> GraphType::getMap()
+vector<vector<int> > GraphType::getMap()
 {
 	return mappingTable;
 }

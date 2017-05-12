@@ -4,6 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <fstream>
+#include <string>
+#include <math.h>
 using namespace std;
 
 
@@ -12,6 +15,8 @@ struct NodeType
 {
 	int MonsterType; // �� ������ Ÿ��. 0~11���� �����ϸ�, 0�� ������, 11�� ���Ͻ�ž�� ���� Ư�� ��ȣ�� Ư�� ������ ��Ÿ��.
 	int index;// ������ ��ȣ���� �������Ŀ����� �ε��� ��ȣ.
+	double x;
+	double y; 
 	bool operator==(NodeType rhs);
 };
 
@@ -21,12 +26,14 @@ private:
 	NodeType* nodeList;// �׷����� ���� ��ü ������ ����Ʈ.
 	int** AdjMatrix;// �׷����� ���� ���¸� ��Ÿ���� ��������.
 	int nodeCount;// �׷����� ���� ���� ��.
-	vector<vector<int>> mappingTable;
+	vector< vector<int> > mappingTable;
 
 public:
 	GraphType();
+	void load_file();
 	GraphType(int n);// ���ϴ� ���� ���� �Է��� �׷����� �����ϴ� ������.
 	GraphType(int** adjMatrix, NodeType* node_list, int n);
+	
 	~GraphType();
 
 	void setGraphType(int** adjMatrix, NodeType* node_list, int n);
@@ -45,7 +52,7 @@ public:
     void ChangeNodeType(int idx,int type);//nodeList의 idx 인덱스의 타입을 type으로 변경
     void MakeMappingTable();//Mapping Table을 만드는 함수로 AddNodeToMpTable을 호출해 사용.
 
-	vector<vector<int>> getMap();
+	vector< vector<int> > getMap();
 };
 
 #endif
