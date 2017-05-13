@@ -1,3 +1,6 @@
+/*
+ProblemA : In specific time, we have to catch 'specific' Poketmon as many as possible.
+*/
 #pragma once
 #include "GraphType.h"
 #include "ShortestPath.h"
@@ -15,16 +18,6 @@ using namespace std;
 #define START_ID 0
 #define POKETSTOP_ID 11
 
-struct Route
-{
-	vector<NodeType> route;
-	int time;
-	int num_catch_poketmon;
-};
-
-/*
-	ProblemA : In specific time, we have to catch specific Poketmon as many as possible.
-*/
 class SolveA
 {
 public:

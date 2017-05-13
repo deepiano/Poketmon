@@ -10,6 +10,7 @@
 using namespace std;
 
 
+
 // struct NodeType�� �� �׷����� ���� ���¸� �����ϴ� ����ü�̴�.
 struct NodeType 
 {
@@ -18,6 +19,13 @@ struct NodeType
 	double x;
 	double y; 
 	bool operator==(NodeType rhs);
+};
+
+struct Route
+{
+	vector<NodeType> route;
+	int time;
+	int num_catch_poketmon;
 };
 
 class GraphType
