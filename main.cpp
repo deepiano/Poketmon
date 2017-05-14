@@ -1,14 +1,19 @@
 #include "SolveA.h"
 #include "SolveB.h"
+#include "SolveC.h"
 
 #include <iostream>
+#include <time.h>
 using namespace std;
 
 int main()
 {
+	clock_t begin, end;
+	begin = clock();
+
 	int sel;
 	cout << "*** Test ***" << endl << endl;
-	sel = 2;
+	sel = 3;
 	//cout << "Choose the number of problem" << endl;
 	//cin >> sel;
 	if (sel == 1)
@@ -36,13 +41,13 @@ int main()
 	}
 	else
 	{
-
+		SolveC solveC;
+		solveC.setProblem();
+		solveC.find_solution();
 	}
 
-	/*GraphType g;
-	int index1 = 77, index2 = 75;
-	NodeType node1 = g.getNodeByIndex(index1), node2 = g.getNodeByIndex(index2);
-	cout << g.WeightIs(node1, node2) << endl;*/
+	end = clock();
+	cout << "수행시간 : " << ((end - begin) / CLOCKS_PER_SEC) << endl;
 
 	return 0;
 }

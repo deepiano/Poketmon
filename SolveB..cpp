@@ -31,13 +31,13 @@ void SolveB::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_
 
 			if (specific_time < time + consuming_time)	continue;
 
-			sol.push_back(next_node);	// Go to the next_node
-
 			for (int i = 0; i < MAX_NODE; ++i)
 			{
 				next_visited[i] = visited[i];
 				next_poketStop_time[i] = poketStop_time[i];
 			}
+
+			sol.push_back(next_node);	// Go to the next_node
 			
 			next_visited[cand[i]] = true;
 			time += consuming_time;

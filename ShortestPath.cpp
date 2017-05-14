@@ -65,15 +65,16 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
         st.pop();   // 시작 버텍스는 제외
 		while(!st.empty())
 		{
-            route.push_back(graph->getNodeByIndex(st.top()));
+			int cur_index = st.top();
+			NodeType cur_node = graph->getNodeByIndex(cur_index);
+			route.push_back(cur_node);
 			// cout << st.top(); 
 			st.pop();
             // if(st.size() != 0)
             //     cout << " -> ";
 		}
 		// cout << endl;
+		time += dist[end];
 	}
-	
-    time += dist[end];
 }
 
