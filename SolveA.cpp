@@ -1,16 +1,11 @@
 #include "SolveA.h"
 
-void SolveA::setGraph(GraphType graph)
-{
-	this->graph = graph;
-	this->map_of_id_to_node_index_list = graph.getMap();
-}
-
 void SolveA::setProblemA(int specific_time, int specific_poketmon_id)
 {
 	this->specific_time = specific_time;
 	this->specific_poketmon_id = specific_poketmon_id;
 	this->map_of_id_to_node_index_list = graph.getMap();
+	this->pStop_node_index_list = this->map_of_id_to_node_index_list[POKETSTOP_ID];
 }
 
 vector<Route> SolveA::getSolutionA()
@@ -36,12 +31,21 @@ bool SolveA::promising(vector<NodeType>& sol, bool visited[], int time, int num_
 void SolveA::process_solution(vector<NodeType>& sol, int time, int num_catch_poketmon)
 {
 	check_for_home(sol, time);
-	Route cur_route;
-	cur_route.route = sol;
-	cur_route.time = time;
-	cur_route.num_catch_poketmon = num_catch_poketmon;
-	all_solution_routes.push_back(cur_route);
-	cout << "I got it" << endl;
+	if (best_route.num_catch_poketmon < num_catch_poketmon)
+	{
+		best_route.route = sol;
+		best_route.time = time;
+		best_route.num_catch_poketmon = num_catch_poketmon;
+		cout << "I got it" << endl;
+	}
+	else if (best_route.time > time)
+	{
+		best_route.route = sol;
+		best_route.time = time;
+		best_route.num_catch_poketmon = num_catch_poketmon;
+		cout << "I got it" << endl;
+	}
+	
 }
 
 
@@ -69,7 +73,7 @@ void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], vector<
 }
 
 
-void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go)
+void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go, int poketStop_time[])
 {
 	vector<int> cand;
 	if ( promising(sol, visited, time, num_catch_poketmon, limit_of_catch) )
@@ -82,54 +86,93 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_
 		
 		construct_candidates(sol, visited, cand, can_catch_poketmon, limit_of_catch, num_of_poketstop_must_go);
 
+		bool* next_visited = new bool[MAX_NODE];
+		int* next_poketStop_time = new int[MAX_NODE];
 		for(int i = 0; i < cand.size(); ++i)
 		{
 			NodeType destination;
 			destination = graph.getNodeByIndex(cand[i]);
-			vector<NodeType> test_sol = sol;
-			int test_time = time;
+			vector<NodeType> next_sol = sol;
+			int next_time = time;
+			int next_num_must_go_pStop = num_of_poketstop_must_go;
+			int next_num_catch_poketmon = num_catch_poketmon;
+			int next_num_poketball = num_poketball;
+			int next_limit_of_catch = limit_of_catch;
 
-			find_shortest_path(destination, test_sol, test_time);
-			vector<NodeType> home_test_sol = test_sol;
-			
-			int home_test_time = test_time;
+			for (int i = 0; i < MAX_NODE; ++i)
+			{
+				next_visited[i] = visited[i];
+				next_poketStop_time[i] = poketStop_time[i];
+			}
+
+			find_shortest_path(destination, next_sol, next_time);
+
+			vector<NodeType> home_test_sol = next_sol;
+			int home_test_time = next_time;
 			check_for_home(home_test_sol, home_test_time);
-			if(home_test_time > specific_time) continue;
+			if (home_test_time > specific_time) continue;	// pruning condition 1
+			if (best_route.num_catch_poketmon != 0 &&
+				best_route.num_catch_poketmon == limit_of_catch &&
+				best_route.time < home_test_time)	continue;
 
-			if(test_time > 15)	// After 15 minutes from the last visit, we can visit again.
-			{
-				vector<int> node_list;
-				node_list = map_of_id_to_node_index_list[POKETSTOP_ID];
-				for(int i = 0; i < node_list.size(); ++i)
-					visited[node_list[i]] = false;
-			}
+			int visit_counter[MAX_NODE];
+			for (int j = 0; j < MAX_NODE; ++j)
+				visit_counter[j] = 0;
+			bool finished = false;
 
-			if(destination.MonsterType == POKETSTOP_ID)
+
+			vector<NodeType>::iterator iter;
+			iter = next_sol.end() - (next_sol.size() - sol.size());
+			while (iter != next_sol.end())
 			{
-				num_of_poketstop_must_go--;
-				num_poketball += 3;
+				int consuming_time = graph.WeightIs(*(iter - 1), *iter);
+
+				// update p_stop state
+				// After time passes 15 min from last visit of poketstop, this can activate.
+				for (int index = 0; index < pStop_node_index_list.size(); ++index)
+				{
+					int& cur_pStop_time = next_poketStop_time[pStop_node_index_list[index]];
+					if (cur_pStop_time > 0)
+					{
+						cur_pStop_time -= consuming_time;
+						if (cur_pStop_time < 0)
+						{
+							cur_pStop_time = 0;
+							next_visited[pStop_node_index_list[index]] = false;
+						}
+					}
+				}
+
+				if (next_visited[(*iter).index] == false && (*iter).MonsterType == POKETSTOP_ID)
+				{
+					next_num_poketball += 3;
+					next_poketStop_time[(*iter).index] = 15;
+					next_num_must_go_pStop -= 1;
+					next_visited[(*iter).index] = true;
+				}
+
+				if ((*iter).MonsterType != POKETSTOP_ID && (iter == next_sol.end() - 1))
+				{
+					next_num_catch_poketmon += 1;
+					next_visited[(*iter).index] = true;
+				}
+
+				visit_counter[iter->index] += 1;
+				if (visit_counter[iter->index] >= 3)
+				{
+					finished = true;
+					break;
+				}
+				iter += 1;
 			}
-			else
-			{
-				if (can_catch_poketmon) num_catch_poketmon++;
-				num_poketball--;
-			}
-			visited[destination.index] = true;
+			if (finished) continue;	// pruning condition 3
+
 			
-			backtrack(test_sol, visited, test_time, num_catch_poketmon, limit_of_catch, num_of_poketstop_must_go);
+			backtrack(next_sol, next_visited, next_time, next_num_catch_poketmon, next_limit_of_catch, next_num_must_go_pStop, next_poketStop_time);
 
-			if(destination.MonsterType == POKETSTOP_ID)
-			{
-				num_of_poketstop_must_go++;
-				num_poketball -= 3;
-			}
-			else
-			{
-				if (can_catch_poketmon) num_catch_poketmon--;
-				num_poketball++;
-			}
-			visited[destination.index] = false;
 		}
+		delete next_visited;
+		delete next_poketStop_time;
 	}
 }
 
@@ -137,15 +180,13 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_
 
 void SolveA::make_all_route()
 {
-
+	best_route.num_catch_poketmon = 0;
+	best_route.time = 9999;
 	int limit_of_catch, num_of_poketstop_must_go;
 	vector<int> poketmon_index_list = map_of_id_to_node_index_list[specific_poketmon_id];
-	cout << "poketmon size: " << poketmon_index_list.size() << endl;
 	for(limit_of_catch = 1; limit_of_catch <= poketmon_index_list.size(); ++limit_of_catch)
 	{
-		if(limit_of_catch != 9) continue;
-		cout << "limit_of_catch = 9" << endl;
-		
+		//if (limit_of_catch != 2) continue;
 		if (limit_of_catch < 4) num_of_poketstop_must_go = 0;
 		else if (limit_of_catch < 7) num_of_poketstop_must_go = 1;
 		else num_of_poketstop_must_go = 2;
@@ -153,14 +194,24 @@ void SolveA::make_all_route()
 		vector<NodeType> sol;
 		sol.push_back(graph.getNodeByIndex(START_ID));
 		bool visited[MAX_NODE];
+		int poketStop_time[MAX_NODE];
 		visited[START_ID] = true;
+		poketStop_time[START_ID] = 0;
 		for(int i = 1; i < MAX_NODE; ++i)
+		{
 			visited[i] = false;
+			poketStop_time[i] = 0;
+		}
 		num_poketball = 3;
 		int time = 0;
 		int num_catch_poketmon = 0;
-		backtrack(sol, visited, time, num_catch_poketmon, limit_of_catch, num_of_poketstop_must_go);
+
+		backtrack(sol, visited, time, num_catch_poketmon, limit_of_catch, num_of_poketstop_must_go, poketStop_time);
+		
+		if (best_route.num_catch_poketmon != limit_of_catch)
+			break;
 	}
+
 	
 }
 
@@ -168,30 +219,12 @@ void SolveA::find_solution()
 {
 	make_all_route();
 
-	Route min_time_route;
-	int min_time = 9999;
-	for(int i = 0; i < all_solution_routes.size(); ++i)
-	{
-		cout << "Route " << i << " : ";
-		for(int j = 0; j < all_solution_routes[i].route.size(); ++j)
-		{
-			cout << all_solution_routes[i].route[j].index << " ";
-		}
-		cout << endl;
-		cout << "Number of catched poketmon : " << all_solution_routes[i].num_catch_poketmon << endl;
-		cout << "Time of Route : " << all_solution_routes[i].time << endl;
-		cout << endl;
-		if(all_solution_routes[i].time < min_time)
-		{
-			min_time = all_solution_routes[i].time;
-			min_time_route = all_solution_routes[i];
-		}
-	}
-	
-	for(int i = 0; i < min_time_route.route.size(); ++i)
-		cout << min_time_route.route[i].index << " ";
+	cout << endl << "Best Route : ";
+	for(int i = 0; i < best_route.route.size(); ++i)
+		cout << best_route.route[i].index << " ";
 	cout << endl;
-	cout << "Best Time : " << min_time << endl;
+	cout << "Best Time : " << best_route.time << endl;
+	cout << "Best Catch : " << best_route.num_catch_poketmon << endl;
 }
 
 

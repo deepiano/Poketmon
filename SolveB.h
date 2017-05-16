@@ -40,6 +40,7 @@ public:
 
 private:
 	vector<Route> all_solution_routes;
+	Route best_route;
 	GraphType graph;
 
 	vector<vector<int> > map_of_id_to_node_index_list;	// map(Poketmon_id -> node_index_list)

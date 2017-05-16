@@ -42,7 +42,7 @@ void SolveC::backtrack(vector<NodeType>& sol, bool visited[], int time, bool pok
 			}
 
 			find_shortest_path(destination, next_sol, next_time);
-			if (next_time > best_route.time) continue;
+			if (next_time > best_route.time) continue;	// pruning condition 1
 
 			int visit_counter[MAX_NODE];
 			for (int j = 0; j < MAX_NODE; ++j)
@@ -53,7 +53,7 @@ void SolveC::backtrack(vector<NodeType>& sol, bool visited[], int time, bool pok
 			{
 				finished = true;
 			}
-			if (finished) continue;
+			if (finished) continue;		// pruning condition 2
 
 			vector<NodeType>::iterator iter;
 			iter = next_sol.end() - (next_sol.size() - sol.size());
@@ -87,10 +87,15 @@ void SolveC::backtrack(vector<NodeType>& sol, bool visited[], int time, bool pok
 
 				if ((*iter).MonsterType != POKETSTOP_ID && (iter == next_sol.end() - 1))
 				{
-					next_ptype_checkList[(*iter).MonsterType] = true;
-					next_num_catch_poketmon += 1;
-					next_visited[(*iter).index] = true;
-					catch_order.push_back((*iter).MonsterType);
+					if (next_num_poketball > 0)
+					{
+						next_ptype_checkList[(*iter).MonsterType] = true;
+						next_num_catch_poketmon += 1;
+						next_visited[(*iter).index] = true;
+						catch_order.push_back((*iter).MonsterType);
+						next_num_poketball -= 1;
+					}
+					
 				}
 
 				visit_counter[iter->index] += 1;
@@ -101,7 +106,7 @@ void SolveC::backtrack(vector<NodeType>& sol, bool visited[], int time, bool pok
 				}
 				iter += 1;
 			}
-			if (finished) continue;
+			if (finished) continue;		// pruning condition 3
 
 			backtrack(next_sol, next_visited, next_time, next_ptype_checkList, next_num_poketball, next_num_catch_poketmon, next_num_must_go_pStop, next_poketStop_time, catch_order);
 			

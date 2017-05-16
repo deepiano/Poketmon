@@ -20,12 +20,12 @@ int main()
 	{
 		SolveA solveA;
 		int spec_time, spec_poketmon_id;
-		cout << "Enter specific time: ";
+		/*cout << "Enter specific time: ";
 		cin >> spec_time;
 		cout << "Enter specific poketmon_id: ";
-		cin >> spec_poketmon_id;
-		//spec_time = 600;		// you can change this.
-		//spec_poketmon_id = 1;	// you can change this.
+		cin >> spec_poketmon_id;*/
+		spec_time = 300;		
+		spec_poketmon_id = 1;
 		solveA.setProblemA(spec_time, spec_poketmon_id);
 		solveA.find_solution();
 	}
@@ -47,7 +47,7 @@ int main()
 	}
 
 	end = clock();
-	cout << "수행시간 : " << ((end - begin) / CLOCKS_PER_SEC) << endl;
+	cout << endl << "Algorithm Search Time : " << ((end - begin) / CLOCKS_PER_SEC) << endl;
 
 	return 0;
 }

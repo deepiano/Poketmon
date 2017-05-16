@@ -80,11 +80,21 @@ bool SolveB::promising(vector<NodeType>& sol, bool visited[], int time, int num_
 
 void SolveB::process_solution(vector<NodeType>& sol, int time, int num_catch_poketmon)
 {
-	Route cur_route;
-	cur_route.route = sol;
-	cur_route.time = time;
-	cur_route.num_catch_poketmon = num_catch_poketmon;
-	all_solution_routes.push_back(cur_route);
+	if (best_route.num_catch_poketmon < num_catch_poketmon)
+	{
+		best_route.route = sol;
+		best_route.time = time;
+		best_route.num_catch_poketmon = num_catch_poketmon;
+	}
+	else if (best_route.num_catch_poketmon == num_catch_poketmon)
+	{
+		if (best_route.time > time)
+		{
+			best_route.route = sol;
+			best_route.time = time;
+			best_route.num_catch_poketmon = num_catch_poketmon;
+		}
+	}
 }
 
 
@@ -101,7 +111,7 @@ void SolveB::construct_candidates(vector<NodeType>& sol, bool visited[], vector<
 		}
 	}
 }
-
+  
 /* 
 if mode == 0, then poketStop_time decreases.
 else if mode == 1, then poketStop_time return to origin.
@@ -151,35 +161,17 @@ void SolveB::find_solution()
 	int num_catch_poketmon = 0;
 	int num_poketball = 3;
 	int poketStop_time[MAX_NODE];
+	best_route.time = 9999;
+	best_route.num_catch_poketmon = 0;
 	for (int i = 0; i < poketStop_node_index_list.size(); ++i)
 		poketStop_time[poketStop_node_index_list[i]] = 0;
 	backtrack(sol, visited, time, num_catch_poketmon, num_poketball, poketStop_time);
 
 	// print solution
-	Route max_catch_route;
-	int max_catch = 0;
-	for (int i = 0; i < all_solution_routes.size(); ++i)
-	{
-		/*cout << "Route " << i << " : ";
-		for (int j = 0; j < all_solution_routes[i].route.size(); ++j)
-		{
-			cout << all_solution_routes[i].route[j].index << " ";
-		}
-		cout << endl;
-		cout << "Number of catched poketmon : " << all_solution_routes[i].num_catch_poketmon << endl;
-		cout << "Time of Route : " << all_solution_routes[i].time << endl;
-		cout << endl;*/
-		if (all_solution_routes[i].num_catch_poketmon > max_catch)
-		{
-			max_catch = all_solution_routes[i].num_catch_poketmon;
-			max_catch_route = all_solution_routes[i];
-		}
-	}
-
 	cout << "Best Route : ";
-	for (int i = 0; i < max_catch_route.route.size(); ++i)
-		cout << max_catch_route.route[i].index << " ";
+	for (int i = 0; i < best_route.route.size(); ++i)
+		cout << best_route.route[i].index << " ";
 	cout << endl;
-	cout << "Best catch : " << max_catch << endl;
-	cout << "Time : " << max_catch_route.time << endl;
+	cout << "Time : " << best_route.time << endl;
+	cout << "Best catch : " << best_route.num_catch_poketmon << endl;
 }

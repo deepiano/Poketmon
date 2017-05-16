@@ -21,7 +21,7 @@ using namespace std;
 class SolveA
 {
 public:
-	void setGraph(GraphType graph);
+	//void setGraph(GraphType graph);
 	void setProblemA(int specific_time, int specific_poketmon_id);
 
 	vector<Route> getSolutionA();
@@ -32,7 +32,7 @@ public:
 	time : time
 	num_catch_poketmon : check number of catched poketmon
 	*/
-	void backtrack(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go);
+	void backtrack(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go, int poketStop_time[]);
 	bool promising(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon, int limit_of_catch);
 	void process_solution(vector<NodeType>& sol, int time, int num_catch_poketmon);
 	void construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand, bool can_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go);
@@ -49,8 +49,10 @@ public:
 
 private:
 	vector<Route> all_solution_routes;
+	Route best_route;
 	GraphType graph;
 	vector<vector<int> > map_of_id_to_node_index_list;	// map(Poketmon_id -> node_index_list)
+	vector<int> pStop_node_index_list;
 	int specific_time;
 	int specific_poketmon_id;
 	int num_poketball;
