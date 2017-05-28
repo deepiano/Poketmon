@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-	bool unit = true;
+	bool unit = false;
 	if (unit)
 	{
 		cout << "Unit Test" << endl;
@@ -43,7 +43,7 @@ int main()
 		cin >> spec_time;
 		cout << "Enter specific poketmon_id: ";
 		cin >> spec_poketmon_id;*/
-		spec_time = 200;		
+		spec_time = 400;		
 		spec_poketmon_id = 1;
 		solveA.setProblem(spec_time, spec_poketmon_id);
 		solveA.find_solution();

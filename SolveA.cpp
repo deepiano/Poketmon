@@ -63,6 +63,12 @@ void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], vector<
 		find_closest_poketstop(sol.back(), dest, visited);
 		
 		cand.push_back(dest.index);
+
+		// Second Comment Solve : stay on current poketstop
+		if (sol.back().MonsterType == POKETSTOP_ID)
+		{
+			cand.push_back(sol.back().index);
+		}
 	}
 }
 
@@ -86,6 +92,7 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_
 		{
 			NodeType destination;
 			destination = graph.getNodeByIndex(cand[i]);
+
 			vector<NodeType> next_sol = sol;
 			int next_time = time;
 			int next_num_must_go_pStop = num_of_poketstop_must_go;
@@ -99,68 +106,85 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_
 				next_poketStop_time[i] = poketStop_time[i];
 			}
 
-			find_shortest_path(destination, next_sol, next_time);
-
-			vector<NodeType> home_test_sol = next_sol;
-			int home_test_time = next_time;
-			check_for_home(home_test_sol, home_test_time);
-			if (home_test_time > specific_time) continue;	// pruning condition 1
-			if (best_route.num_catch_poketmon != 0 &&
-				best_route.num_catch_poketmon == limit_of_catch &&
-				best_route.time < home_test_time)	continue;
-
-			int visit_counter[MAX_NODE];
-			for (int j = 0; j < MAX_NODE; ++j)
-				visit_counter[j] = 0;
-			bool finished = false;
-
-
-			vector<NodeType>::iterator iter;
-			iter = next_sol.end() - (next_sol.size() - sol.size());
-			while (iter != next_sol.end())
+			// Second Comment Solve : stay on current poketstop
+			if (destination == sol.back())
 			{
-				int consuming_time = graph.WeightIs(*(iter - 1), *iter);
-
-				// update p_stop state
-				// After time passes 15 min from last visit of poketstop, this can activate.
+				next_sol.push_back(destination);
+				next_time += 15;
+				next_num_must_go_pStop -= 1;
+				next_num_poketball += 3;
 				for (int index = 0; index < pStop_node_index_list.size(); ++index)
 				{
-					int& cur_pStop_time = next_poketStop_time[pStop_node_index_list[index]];
-					if (cur_pStop_time > 0)
+					next_poketStop_time[pStop_node_index_list[index]] = 0;
+					next_visited[pStop_node_index_list[index]] = false;
+				}
+				next_poketStop_time[destination.index] = 15;
+				next_visited[pStop_node_index_list[destination.index]] = true;
+			}
+			else
+			{
+				find_shortest_path(destination, next_sol, next_time);
+
+				vector<NodeType> home_test_sol = next_sol;
+				int home_test_time = next_time;
+				check_for_home(home_test_sol, home_test_time);
+				if (home_test_time > specific_time) continue;	// pruning condition 1
+				if (best_route.num_catch_poketmon != 0 &&
+					best_route.num_catch_poketmon == limit_of_catch &&
+					best_route.time < home_test_time)	continue;
+
+				int visit_counter[MAX_NODE];
+				for (int j = 0; j < MAX_NODE; ++j)
+					visit_counter[j] = 0;
+				bool finished = false;
+
+
+				vector<NodeType>::iterator iter;
+				iter = next_sol.end() - (next_sol.size() - sol.size());
+				while (iter != next_sol.end())
+				{
+					int consuming_time = graph.WeightIs(*(iter - 1), *iter);
+
+					// update p_stop state
+					// After time passes 15 min from last visit of poketstop, this can activate.
+					for (int index = 0; index < pStop_node_index_list.size(); ++index)
 					{
-						cur_pStop_time -= consuming_time;
-						if (cur_pStop_time < 0)
+						int& cur_pStop_time = next_poketStop_time[pStop_node_index_list[index]];
+						if (cur_pStop_time > 0)
 						{
-							cur_pStop_time = 0;
-							next_visited[pStop_node_index_list[index]] = false;
+							cur_pStop_time -= consuming_time;
+							if (cur_pStop_time < 0)
+							{
+								cur_pStop_time = 0;
+								next_visited[pStop_node_index_list[index]] = false;
+							}
 						}
 					}
-				}
 
-				if (next_visited[(*iter).index] == false && (*iter).MonsterType == POKETSTOP_ID)
-				{
-					next_num_poketball += 3;
-					next_poketStop_time[(*iter).index] = 15;
-					next_num_must_go_pStop -= 1;
-					next_visited[(*iter).index] = true;
-				}
+					if (next_visited[(*iter).index] == false && (*iter).MonsterType == POKETSTOP_ID)
+					{
+						next_num_poketball += 3;
+						next_poketStop_time[(*iter).index] = 15;
+						next_num_must_go_pStop -= 1;
+						next_visited[(*iter).index] = true;
+					}
 
-				if ((*iter).MonsterType != POKETSTOP_ID && (iter == next_sol.end() - 1))
-				{
-					next_num_catch_poketmon += 1;
-					next_visited[(*iter).index] = true;
-				}
+					if ((*iter).MonsterType != POKETSTOP_ID && (iter == next_sol.end() - 1))
+					{
+						next_num_catch_poketmon += 1;
+						next_visited[(*iter).index] = true;
+					}
 
-				visit_counter[iter->index] += 1;
-				if (visit_counter[iter->index] >= 3)
-				{
-					finished = true;
-					break;
+					visit_counter[iter->index] += 1;
+					if (visit_counter[iter->index] >= 3)
+					{
+						finished = true;
+						break;
+					}
+					iter += 1;
 				}
-				iter += 1;
+				if (finished) continue;	// pruning condition 3
 			}
-			if (finished) continue;	// pruning condition 3
-
 			
 			backtrack(next_sol, next_visited, next_time, next_num_catch_poketmon, next_limit_of_catch, next_num_must_go_pStop, next_poketStop_time);
 
@@ -247,7 +271,7 @@ void SolveA::find_shortest_path(NodeType destination, vector<NodeType>& route, i
 
 void SolveA::find_closest_poketstop(NodeType cur, NodeType& destination, bool visited[])
 {
-	cout << "find_closest_poketstop" << endl;
+	//cout << "find_closest_poketstop" << endl;
 	vector<int> poketstop_node_index_list = map_of_id_to_node_index_list[POKETSTOP_ID];
 	// int min_distance = 9999;
 	int min_time = 9999;
@@ -271,8 +295,6 @@ void SolveA::find_closest_poketstop(NodeType cur, NodeType& destination, bool vi
 			tmp_route.push_back(cur);
 			int time = 0;
 			find_shortest_path(stop_node, tmp_route, time);
-			cout << "mint_time : " << min_time << endl;
-			cout << "time : " << time << endl;
 			if (min_time > time)
 			{
 				min_time = time;
