@@ -8,12 +8,31 @@ using namespace std;
 
 int main()
 {
+	bool unit = true;
+	if (unit)
+	{
+		cout << "Unit Test" << endl;
+		SolveA a;
+		NodeType d;
+		d.index = 10;
+		vector<NodeType> v;
+		NodeType n;
+		n.index = 0;
+		n.MonsterType = 0;
+		v.push_back(n);
+		int t = 0;
+		a.find_shortest_path(d, v, t);
+		cout << t << endl;
+		return 0;
+	}
+
+	
 	clock_t begin, end;
 	begin = clock();
 
 	int sel;
 	cout << "*** Test ***" << endl << endl;
-	sel = 3;
+	sel = 1;
 	//cout << "Choose the number of problem" << endl;
 	//cin >> sel;
 	if (sel == 1)
@@ -24,9 +43,9 @@ int main()
 		cin >> spec_time;
 		cout << "Enter specific poketmon_id: ";
 		cin >> spec_poketmon_id;*/
-		spec_time = 300;		
+		spec_time = 200;		
 		spec_poketmon_id = 1;
-		solveA.setProblemA(spec_time, spec_poketmon_id);
+		solveA.setProblem(spec_time, spec_poketmon_id);
 		solveA.find_solution();
 	}
 	else if (sel == 2)

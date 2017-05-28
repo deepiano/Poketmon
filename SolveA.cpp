@@ -1,16 +1,11 @@
 #include "SolveA.h"
 
-void SolveA::setProblemA(int specific_time, int specific_poketmon_id)
+void SolveA::setProblem(int specific_time, int specific_poketmon_id)
 {
 	this->specific_time = specific_time;
 	this->specific_poketmon_id = specific_poketmon_id;
 	this->map_of_id_to_node_index_list = graph.getMap();
 	this->pStop_node_index_list = this->map_of_id_to_node_index_list[POKETSTOP_ID];
-}
-
-vector<Route> SolveA::getSolutionA()
-{
-	return all_solution_routes;
 }
 
 
@@ -45,7 +40,6 @@ void SolveA::process_solution(vector<NodeType>& sol, int time, int num_catch_pok
 		best_route.num_catch_poketmon = num_catch_poketmon;
 		cout << "I got it" << endl;
 	}
-	
 }
 
 
@@ -253,20 +247,35 @@ void SolveA::find_shortest_path(NodeType destination, vector<NodeType>& route, i
 
 void SolveA::find_closest_poketstop(NodeType cur, NodeType& destination, bool visited[])
 {
-	vector<int> poketstop_node_index_List = map_of_id_to_node_index_list[POKETSTOP_ID];
-	int min_distance = 9999;
-	for(int i = 0; i < poketstop_node_index_List.size(); ++i)
+	cout << "find_closest_poketstop" << endl;
+	vector<int> poketstop_node_index_list = map_of_id_to_node_index_list[POKETSTOP_ID];
+	// int min_distance = 9999;
+	int min_time = 9999;
+	for(int i = 0; i < poketstop_node_index_list.size(); ++i)
 	{
-		if(visited[poketstop_node_index_List[i]] == false)
+		if(visited[poketstop_node_index_list[i]] == false)
 		{
-			NodeType stop_node = graph.getNodeByIndex(poketstop_node_index_List[i]); 
-			double dist = (cur.x - stop_node.x) * (cur.x - stop_node.x);
-			dist += (cur.y - stop_node.y) * (cur.y - stop_node.y);
-			dist = sqrt(dist);
+			NodeType stop_node = graph.getNodeByIndex(poketstop_node_index_list[i]);
 
-			if(dist < min_distance)
+			// double dist = (cur.x - stop_node.x) * (cur.x - stop_node.x);
+			// dist += (cur.y - stop_node.y) * (cur.y - stop_node.y);
+			// dist = sqrt(dist);
+
+			// if(dist < min_distance)
+			// {
+			// 	min_distance = dist;
+			// 	destination = stop_node;
+			// }
+
+			vector<NodeType> tmp_route;
+			tmp_route.push_back(cur);
+			int time = 0;
+			find_shortest_path(stop_node, tmp_route, time);
+			cout << "mint_time : " << min_time << endl;
+			cout << "time : " << time << endl;
+			if (min_time > time)
 			{
-				min_distance = dist;
+				min_time = time;
 				destination = stop_node;
 			}
 		}

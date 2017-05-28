@@ -22,9 +22,7 @@ class SolveA
 {
 public:
 	//void setGraph(GraphType graph);
-	void setProblemA(int specific_time, int specific_poketmon_id);
-
-	vector<Route> getSolutionA();
+	void setProblem(int specific_time, int specific_poketmon_id);
 
 	/*
 	sol : solution
