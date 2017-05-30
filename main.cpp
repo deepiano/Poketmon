@@ -32,7 +32,7 @@ int main()
 
 	int sel;
 	cout << "*** Test ***" << endl << endl;
-	sel = 1;
+	sel = 3;
 	//cout << "Choose the number of problem" << endl;
 	//cin >> sel;
 	if (sel == 1)

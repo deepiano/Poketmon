@@ -119,7 +119,7 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_
 					next_visited[pStop_node_index_list[index]] = false;
 				}
 				next_poketStop_time[destination.index] = 15;
-				next_visited[pStop_node_index_list[destination.index]] = true;
+				next_visited[destination.index] = true;
 			}
 			else
 			{
@@ -271,25 +271,13 @@ void SolveA::find_shortest_path(NodeType destination, vector<NodeType>& route, i
 
 void SolveA::find_closest_poketstop(NodeType cur, NodeType& destination, bool visited[])
 {
-	//cout << "find_closest_poketstop" << endl;
 	vector<int> poketstop_node_index_list = map_of_id_to_node_index_list[POKETSTOP_ID];
-	// int min_distance = 9999;
 	int min_time = 9999;
 	for(int i = 0; i < poketstop_node_index_list.size(); ++i)
 	{
 		if(visited[poketstop_node_index_list[i]] == false)
 		{
 			NodeType stop_node = graph.getNodeByIndex(poketstop_node_index_list[i]);
-
-			// double dist = (cur.x - stop_node.x) * (cur.x - stop_node.x);
-			// dist += (cur.y - stop_node.y) * (cur.y - stop_node.y);
-			// dist = sqrt(dist);
-
-			// if(dist < min_distance)
-			// {
-			// 	min_distance = dist;
-			// 	destination = stop_node;
-			// }
 
 			vector<NodeType> tmp_route;
 			tmp_route.push_back(cur);

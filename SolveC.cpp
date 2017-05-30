@@ -239,20 +239,21 @@ void SolveC::find_shortest_path(NodeType destination, vector<NodeType>& route, i
 
 void SolveC::find_closest_poketstop(NodeType cur, NodeType& destination, bool visited[])
 {
-	vector<int> poketstop_node_index_List = map_of_id_to_node_index_list[POKETSTOP_ID];
-	int min_distance = 9999;
-	for (int i = 0; i < poketstop_node_index_List.size(); ++i)
+	vector<int> poketstop_node_index_list = map_of_id_to_node_index_list[POKETSTOP_ID];
+	int min_time = 9999;
+	for(int i = 0; i < poketstop_node_index_list.size(); ++i)
 	{
-		if (visited[poketstop_node_index_List[i]] == false)
+		if(visited[poketstop_node_index_list[i]] == false)
 		{
-			NodeType stop_node = graph.getNodeByIndex(poketstop_node_index_List[i]);
-			double dist = (cur.x - stop_node.x) * (cur.x - stop_node.x);
-			dist += (cur.y - stop_node.y) * (cur.y - stop_node.y);
-			dist = sqrt(dist);
+			NodeType stop_node = graph.getNodeByIndex(poketstop_node_index_list[i]);
 
-			if (dist < min_distance)
+			vector<NodeType> tmp_route;
+			tmp_route.push_back(cur);
+			int time = 0;
+			find_shortest_path(stop_node, tmp_route, time);
+			if (min_time > time)
 			{
-				min_distance = dist;
+				min_time = time;
 				destination = stop_node;
 			}
 		}
@@ -273,10 +274,11 @@ void SolveC::find_closest_poketmons(NodeType cur, vector<int>& closest_poketmon_
 			for (int i = 0; i < poketmon_node_index_List.size(); ++i)
 			{
 					NodeType poke_node = graph.getNodeByIndex(poketmon_node_index_List[i]);
-					double dist = (cur.x - poke_node.x) * (cur.x - poke_node.x);
-					dist += (cur.y - poke_node.y) * (cur.y - poke_node.y);
-					dist = sqrt(dist);
-
+					
+					vector<NodeType> tmp_route;
+					tmp_route.push_back(cur);
+					int dist = 0;
+					find_shortest_path(poke_node, tmp_route, dist);
 					if (dist < min_distance)
 					{
 						min_distance = dist;
