@@ -33,7 +33,7 @@ void SolveA::process_solution(vector<NodeType>& sol, int time, int num_catch_pok
 		best_route.num_catch_poketmon = num_catch_poketmon;
 		cout << "I got it" << endl;
 	}
-	else if (best_route.time > time)
+	else if (best_route.num_catch_poketmon ==  num_catch_poketmon && best_route.time > time)
 	{
 		best_route.route = sol;
 		best_route.time = time;
@@ -73,7 +73,7 @@ void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], vector<
 }
 
 
-void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go, int poketStop_time[])
+void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_poketball, int num_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go, int poketStop_time[])
 {
 	vector<int> cand;
 	if ( promising(sol, visited, time, num_catch_poketmon, limit_of_catch) )
@@ -171,6 +171,7 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_
 
 					if ((*iter).MonsterType != POKETSTOP_ID && (iter == next_sol.end() - 1))
 					{
+						next_num_poketball -= 1;
 						next_num_catch_poketmon += 1;
 						next_visited[(*iter).index] = true;
 					}
@@ -186,7 +187,7 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_
 				if (finished) continue;	// pruning condition 3
 			}
 			
-			backtrack(next_sol, next_visited, next_time, next_num_catch_poketmon, next_limit_of_catch, next_num_must_go_pStop, next_poketStop_time);
+			backtrack(next_sol, next_visited, next_time, next_num_poketball, next_num_catch_poketmon, next_limit_of_catch, next_num_must_go_pStop, next_poketStop_time);
 
 		}
 		delete next_visited;
@@ -220,11 +221,11 @@ void SolveA::make_all_route()
 			visited[i] = false;
 			poketStop_time[i] = 0;
 		}
-		num_poketball = 3;
+		int num_poketball = 3;
 		int time = 0;
 		int num_catch_poketmon = 0;
 
-		backtrack(sol, visited, time, num_catch_poketmon, limit_of_catch, num_of_poketstop_must_go, poketStop_time);
+		backtrack(sol, visited, time, num_poketball, num_catch_poketmon, limit_of_catch, num_of_poketstop_must_go, poketStop_time);
 		
 		if (best_route.num_catch_poketmon != limit_of_catch)
 			break;

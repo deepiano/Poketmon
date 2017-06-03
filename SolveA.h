@@ -30,7 +30,7 @@ public:
 	time : time
 	num_catch_poketmon : check number of catched poketmon
 	*/
-	void backtrack(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go, int poketStop_time[]);
+	void backtrack(vector<NodeType>& sol, bool visited[], int time, int num_poketball, int num_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go, int poketStop_time[]);
 	bool promising(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon, int limit_of_catch);
 	void process_solution(vector<NodeType>& sol, int time, int num_catch_poketmon);
 	void construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand, bool can_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go);
@@ -53,6 +53,5 @@ private:
 	vector<int> pStop_node_index_list;
 	int specific_time;
 	int specific_poketmon_id;
-	int num_poketball;
 };
 
