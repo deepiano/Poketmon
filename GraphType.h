@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _GRAPHTYPE_H_
+#define _GRAPHTYPE_H_
 
 #include <iostream>
 #include <vector>
@@ -7,6 +8,7 @@
 #include <string>
 #include <math.h>
 using namespace std;
+
 
 
 struct NodeType 
@@ -28,10 +30,10 @@ struct Route
 class GraphType
 {
 private:
-	NodeType* nodeList;
-	int** AdjMatrix;
-	int nodeCount;
-	vector<vector<int>> mappingTable;
+	NodeType* nodeList;// ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®.
+	int** AdjMatrix;// ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
+	int nodeCount;// ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½.
+	vector< vector<int> > mappingTable;
 
 public:
 	GraphType();
@@ -43,6 +45,7 @@ public:
 
 	void setGraphType(int** adjMatrix, NodeType* node_list, int n);
 
+
 	bool IsAdjacent(NodeType first, NodeType second);
 	int WeightIs(NodeType first,NodeType second);
 	vector<int> getAdjacent(NodeType target);
@@ -52,11 +55,13 @@ public:
 	int** getAdjMatrix();
 	int getNodeCount();
 	
-	void AddToAdj(int num,int row,int col);// AdjMatrix[row][col]ÀÇ °ªÀ» numÀ¸·Î ¼³Á¤. ´Ù¸¥ ÀÎÁ¢Çà·Ä °ª ¼³Á¤ ¹æ¹ýÀ» Ã£À¸¸é Á¦°Å ¿¹Á¤.
-    void AddNodeToMpTable(NodeType nod);// Mapping Table¿¡ ³ëµå Ãß°¡
-    void ChangeNodeType(int idx,int type);//nodeListÀÇ idx ÀÎµ¦½ºÀÇ Å¸ÀÔÀ» typeÀ¸·Î º¯°æ
-    void MakeMappingTable();//Mapping TableÀ» ¸¸µå´Â ÇÔ¼ö·Î AddNodeToMpTableÀ» È£ÃâÇØ »ç¿ë.
+	void AddToAdj(int num,int row,int col);// AdjMatrix[row][col]ï¿½ï¿½ ï¿½ï¿½ï¿½ numï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½. ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
+    void AddNodeToMpTable(NodeType nod);// Mapping Tableï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+    void ChangeNodeType(int idx,int type);//nodeListï¿½ï¿½ idx ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ typeï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    void MakeMappingTable();//Mapping Tableï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ AddNodeToMpTableï¿½ È£ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
 
 	vector<vector<int>> getMap();
 };
+
+#endif
 

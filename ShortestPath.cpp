@@ -15,9 +15,9 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 		dist[i] = INF;
 		path[i] = -1;
 	}
-	dist[start] = 0;		//½ÃÀÛÁ¡ Ã³¸®
-	path[start] = start;	//½ÃÀÛÁ¡ Ã³¸®
-	
+	dist[start] = 0;		//ì‹œì‘ì  ì²˜ë¦¬
+	path[start] = start;	//ì‹œì‘ì  ì²˜ë¦¬
+
 	while(!pq.empty())
 	{
 		struct DistanceContainer cur_container = pq.top();
@@ -26,7 +26,7 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 		int cur_vertex = cur_container.vertex;
 		for(int i = 0; i < num_vertex; ++i)
 		{
-			if (adj[cur_vertex][i] > 0)	// ¿¬°á µÇ¾î ÀÖ´Ù¸é
+			if (adj[cur_vertex][i] > 0)	// ì—°ê²° ë˜ì–´ ìˆë‹¤ë©´
 			{
 				int cur_distance = dist[cur_vertex] + adj[cur_vertex][i];
 				if (cur_distance < dist[i])
@@ -42,7 +42,8 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 		}
 	}
 
-	// cout << "°¢ ÀÎµ¦½º ÃÖ´Ü °æ·Î ±æÀÌ" << endl;
+
+	// cout << "ê° ì¸ë±ìŠ¤ ìµœë‹¨ ê²½ë¡œ ê¸¸ì´" << endl;
 	// for(int i = 0; i < num_vertex; ++i)
 	// {
 	// 	cout << "[" << i << "] : " << dist[i] << endl;
@@ -62,7 +63,7 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 		}
 		st.push(start);
 
-        st.pop();   // ½ÃÀÛ ¹öÅØ½º´Â Á¦¿Ü
+        st.pop();   // ì‹œì‘ ë²„í…ìŠ¤ëŠ” ì œì™¸
 		while(!st.empty())
 		{
 			int cur_index = st.top();
@@ -76,4 +77,6 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 		// cout << endl;
 		time += dist[end];
 	}
+
 }
+
