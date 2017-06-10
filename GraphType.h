@@ -30,10 +30,10 @@ struct Route
 class GraphType
 {
 private:
-	NodeType* nodeList;
-	int** AdjMatrix;
-	int nodeCount;
-	vector<vector<int>> mappingTable;
+	NodeType* nodeList;// �׷����� ���� ��ü ������ ����Ʈ.
+	int** AdjMatrix;// �׷����� ���� ���¸� ��Ÿ���� ��������.
+	int nodeCount;// �׷����� ���� ���� ��.
+	vector< vector<int> > mappingTable;
 
 public:
 	GraphType();
@@ -46,6 +46,7 @@ public:
 	~GraphType();
 
 	void setGraphType(int** adjMatrix, NodeType* node_list, int n);
+
 
 	bool IsAdjacent(NodeType first, NodeType second);
 	int WeightIs(NodeType first,NodeType second);
@@ -61,6 +62,7 @@ public:
     void AddNodeToMpTable(NodeType nod);// Mapping Table에 노드 추가
     void ChangeNodeType(int idx,int type);//nodeList의 idx 인덱스의 타입을 type으로 변경
     void MakeMappingTable();//Mapping Table을 만드는 함수로 AddNodeToMpTable을 호출해 사용.
+
 
 	vector< vector<int> > getMap();
 };

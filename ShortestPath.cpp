@@ -16,10 +16,10 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 		path[i] = -1;
 	}
 
+
 	dist[start] = 0;		//시작점 처리
 	path[start] = start;	//시작점 처리
 
-	
 	while(!pq.empty())
 	{
 		struct DistanceContainer cur_container = pq.top();
@@ -29,7 +29,9 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 		for(int i = 0; i < num_vertex; ++i)
 		{
 
+
 			if (adj[cur_vertex][i] > 0)	// 연결 되어 있다면
+
 
 			{
 				int cur_distance = dist[cur_vertex] + adj[cur_vertex][i];

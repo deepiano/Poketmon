@@ -57,7 +57,6 @@ void GraphType::load_file()
 		this->nodeList[i].MonsterType=num;
 		//>> this->nodeList[i].x >> this->nodeList[i].y;
 
-
 	}
 
 	placeFile.close();
@@ -225,7 +224,9 @@ void GraphType::MakeMappingTable()
     }
 }
 
+
 vector<vector<int> > GraphType::getMap()
+
 {
 	return mappingTable;
 }
