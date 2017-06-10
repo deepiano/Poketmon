@@ -1,4 +1,7 @@
-#pragma once
+
+#ifndef _SHORTESTPATH_H_
+#define _SHORTESTPATH_H_
+
 
 #include "GraphType.h"
 
@@ -16,7 +19,8 @@ struct DistanceContainer
 	int distance;
 };
 
-// ¿ì¼±¼øÀ§ Å¥ ¿¬»êÀÚ overloading
+// ìš°ì„ ìˆœìœ„ í ì—°ì‚°ì overloading
+
 struct Comp
 {
 	bool operator() (struct DistanceContainer lhs, struct DistanceContainer rhs)
@@ -26,5 +30,8 @@ struct Comp
 };
 
 
-void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, vector<NodeType>& route, int& time);	// °Å¸® º¤ÅÍ Ã¤¿ì±â
+
+void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, vector<NodeType>& route, int& time);	// ê±°ë¦¬ ë²¡í„° ì±„ìš°ê¸°
+
+#endif
 

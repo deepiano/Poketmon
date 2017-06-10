@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _GRAPHTYPE_H_
+#define _GRAPHTYPE_H_
 
 #include <iostream>
 #include <vector>
@@ -7,6 +8,7 @@
 #include <string>
 #include <math.h>
 using namespace std;
+
 
 
 struct NodeType 
@@ -36,7 +38,9 @@ private:
 public:
 	GraphType();
 	void load_file();
+
 	GraphType(int n);
+
 	GraphType(int** adjMatrix, NodeType* node_list, int n);
 	
 	~GraphType();
@@ -51,12 +55,15 @@ public:
 	NodeType getNodeByIndex(int idx);
 	int** getAdjMatrix();
 	int getNodeCount();
-	
-	void AddToAdj(int num,int row,int col);// AdjMatrix[row][col]ÀÇ °ªÀ» numÀ¸·Î ¼³Á¤. ´Ù¸¥ ÀÎÁ¢Çà·Ä °ª ¼³Á¤ ¹æ¹ıÀ» Ã£À¸¸é Á¦°Å ¿¹Á¤.
-    void AddNodeToMpTable(NodeType nod);// Mapping Table¿¡ ³ëµå Ãß°¡
-    void ChangeNodeType(int idx,int type);//nodeListÀÇ idx ÀÎµ¦½ºÀÇ Å¸ÀÔÀ» typeÀ¸·Î º¯°æ
-    void MakeMappingTable();//Mapping TableÀ» ¸¸µå´Â ÇÔ¼ö·Î AddNodeToMpTableÀ» È£ÃâÇØ »ç¿ë.
 
-	vector<vector<int>> getMap();
+	
+	void AddToAdj(int num,int row,int col);// AdjMatrix[row][col]ì˜ ê°’ì„ numìœ¼ë¡œ ì„¤ì •. ë‹¤ë¥¸ ì¸ì ‘í–‰ë ¬ ê°’ ì„¤ì • ë°©ë²•ì„ ì°¾ìœ¼ë©´ ì œê±° ì˜ˆì •.
+    void AddNodeToMpTable(NodeType nod);// Mapping Tableì— ë…¸ë“œ ì¶”ê°€
+    void ChangeNodeType(int idx,int type);//nodeListì˜ idx ì¸ë±ìŠ¤ì˜ íƒ€ì…ì„ typeìœ¼ë¡œ ë³€ê²½
+    void MakeMappingTable();//Mapping Tableì„ ë§Œë“œëŠ” í•¨ìˆ˜ë¡œ AddNodeToMpTableì„ í˜¸ì¶œí•´ ì‚¬ìš©.
+
+	vector< vector<int> > getMap();
 };
+
+#endif
 

@@ -14,16 +14,20 @@ GraphType::GraphType()
 	{
 		this->AdjMatrix[i]=new int[100];
 	}
+
 	vector<int> temp;
 	for(int i=0;i<12;i++)
 	{
 		this->mappingTable.push_back(temp);
 	}
+
 	for(int i=0;i<100;i++)
 	{
 		this->nodeList[i].index=i;
 	}
+
 	nodeList[0].MonsterType=0;
+
 	nodeCount=100;
 
 	load_file();
@@ -45,12 +49,15 @@ void GraphType::load_file()
 
 	string str;
 	std::getline(placeFile, str);
+
 	for(int i = 0; i <= 100; ++i)
 	{
 		int num;
 		placeFile>>num;
 		this->nodeList[i].MonsterType=num;
 		//>> this->nodeList[i].x >> this->nodeList[i].y;
+
+
 	}
 
 	placeFile.close();
@@ -70,6 +77,7 @@ void GraphType::load_file()
 			int num;
 			weightFile >>num;
 			this->AdjMatrix[i][j]=num;
+
 		}
 	}
 }
@@ -138,6 +146,7 @@ void GraphType::setGraphType(int** adjMatrix, NodeType* node_list, int n)
 
 bool GraphType::IsAdjacent(NodeType first,NodeType second)
 {
+
 	vector<int> adjFirst=getAdjacent(first);
 	if(find(adjFirst.begin(),adjFirst.end(),second.index)!=adjFirst.end())
 	{
@@ -216,7 +225,60 @@ void GraphType::MakeMappingTable()
     }
 }
 
-vector<vector<int>> GraphType::getMap()
+vector<vector<int> > GraphType::getMap()
 {
 	return mappingTable;
 }
+/*
+ loadInputfile();
+    loadPlacefile();
+    g->MakeMappingTable();//Main함수에서의 파일 로드 및 초기화방식
+    */
+/*
+void MainWindow::loadInputfile()
+{
+
+    QFile file("input.txt");
+    if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
+    {
+       return;
+    }
+    QTextStream in(&file);
+    QString inp;
+    while(!in.atEnd())
+    {
+        for(int i=0;i<g->getNodeCount();i++)
+        {
+            for(int j=0;j<g->getNodeCount();j++)
+            {
+                 in>>inp;
+                 g->AddToAdj(inp.toInt(),i,j);
+            }
+        }
+
+
+    }
+    file.close();
+}
+
+void MainWindow::loadPlacefile()
+{
+    QFile file("placeinput.txt");
+    if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
+    {
+        return;
+    }
+    QTextStream in(&file);
+    QString nodnum;
+    QString montype;
+    while(!in.atEnd())
+    {
+        in>>nodnum;
+        in>>montype;
+        g->ChangeNodeType(nodnum.toInt(),montype.toInt());
+
+    }
+    file.close();
+}
+*/
+

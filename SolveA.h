@@ -1,5 +1,9 @@
+/*
+ProblemA : In specific time, we have to catch 'specific' Poketmon as many as possible.
+*/
 #pragma once
 #include "GraphType.h"
+#include "ShortestPath.h"
 #include <iostream>
 #include <stack>
 #include <vector>
@@ -10,49 +14,44 @@ using namespace std;
 #define MAX_CANDIDATES 12
 #define NUM_ID 12
 
+#define START_VERTEX 0
 #define START_ID 0
 #define POKETSTOP_ID 11
 
-struct Route
-{
-	vector<NodeType> route;
-	int time;
-	int poketmon_counter[NUM_ID];
-};
-
-/*
-	ProblemA : In specific time, we have to catch specific Poketmon as many as possible.
-*/
 class SolveA
 {
 public:
-	void setGraph(GraphType graph);
-	void setProblemA(int specificTime, int specific_poketmon_id);
+	//void setGraph(GraphType graph);
+	void setProblem(int specific_time, int specific_poketmon_id);
 
-	vector<Route> getSolutionA();
-	
 	/*
 	sol : solution
 	visited : if true - The place has visited
-	catched : if true - Poketmon has catched
 	time : time
-	poketmon_counter : check counter
+	num_catch_poketmon : check number of catched poketmon
 	*/
-	void backtrack(vector<NodeType>& sol, bool visited[], bool catched[], int time, int poketmon_counter[]);
-	bool promising(vector<NodeType>& sol);
-	void construct_candidates(vector<NodeType>& sol, bool visited[], bool cahtched[], vector<int>& cand);
-	void process_solution(vector<NodeType>& sol, int time, int poketmon_counter[]);
+	void backtrack(vector<NodeType>& sol, bool visited[], int time, int num_poketball, int num_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go, int poketStop_time[]);
+	bool promising(vector<NodeType>& sol, bool visited[], int time, int num_catch_poketmon, int limit_of_catch);
+	void process_solution(vector<NodeType>& sol, int time, int num_catch_poketmon);
+	void construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand, bool can_catch_poketmon, int limit_of_catch, int num_of_poketstop_must_go);
+	
 	void make_all_route();
 
 	void find_solution();
 
-private:
-	vector<Route> all_routes;
-	GraphType graph;
-	int poketmon_counter[NUM_ID];
+	void check_for_home(vector<NodeType>& route, int& time);
+	void search_nodes_by_id(int id, vector<int>& node_list);
+	void find_shortest_path(NodeType destination, vector<NodeType>& route, int& time);
+	
+	void find_closest_poketstop(NodeType cur, NodeType& destination, bool visited[]);
 
-	int specificTime;
+private:
+	vector<Route> all_solution_routes;
+	Route best_route;
+	GraphType graph;
+	vector<vector<int> > map_of_id_to_node_index_list;	// map(Poketmon_id -> node_index_list)
+	vector<int> pStop_node_index_list;
+	int specific_time;
 	int specific_poketmon_id;
-	int num_poketball;
 };
 
