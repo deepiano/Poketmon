@@ -17,7 +17,7 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 	}
 	dist[start] = 0;		//시작점 처리
 	path[start] = start;	//시작점 처리
-	
+
 	while(!pq.empty())
 	{
 		struct DistanceContainer cur_container = pq.top();
@@ -41,6 +41,7 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 			}
 		}
 	}
+
 
 	// cout << "각 인덱스 최단 경로 길이" << endl;
 	// for(int i = 0; i < num_vertex; ++i)
@@ -76,5 +77,6 @@ void Dijkstra(GraphType* graph, int num_vertex, int** adj, int start, int end, v
 		// cout << endl;
 		time += dist[end];
 	}
+
 }
 

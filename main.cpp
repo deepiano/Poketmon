@@ -1,8 +1,10 @@
+
 #include "SolveA.h"
 #include "SolveB.h"
 #include "SolveC.h"
 #include "GreedySolveA.h"
 #include "GreedySolveB.h"
+#include "GreedySolveC.h"
 
 #include <iostream>
 #include <time.h>
@@ -22,9 +24,14 @@ int main()
 		// ga.setProblem(spec_time, spec_id);
 		// ga.find_solution();
 
-		GreedySolveB gb;
-		gb.setProblem(spec_time);
-		gb.find_solution();
+		//GreedySolveB gb;
+		//gb.setProblem(spec_time);
+		//gb.find_solution();
+    
+    GreedySolveC c;
+    	c.setGraph(g);
+	c.setProblem();
+	c.find_solution();
 		return 0;
 	}
 

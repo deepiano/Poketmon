@@ -15,10 +15,18 @@ GraphType::GraphType()
 		this->AdjMatrix[i]=new int[100];
 	}
 
+	vector<int> temp;
+	for(int i=0;i<12;i++)
+	{
+		this->mappingTable.push_back(temp);
+	}
+
 	for(int i=0;i<100;i++)
 	{
 		this->nodeList[i].index=i;
 	}
+
+	nodeList[0].MonsterType=0;
 	nodeCount=100;
 
 	load_file();
@@ -40,11 +48,14 @@ void GraphType::load_file()
 
 	string str;
 	std::getline(placeFile, str);
-	for(int i = 0; i < 100; ++i)
+
+	for(int i = 0; i <= 100; ++i)
 	{
-		int tmp;
-		placeFile >> tmp;
-		placeFile >> this->nodeList[i].MonsterType >> this->nodeList[i].x >> this->nodeList[i].y;
+		int num;
+		placeFile>>num;
+		this->nodeList[i].MonsterType=num;
+		//>> this->nodeList[i].x >> this->nodeList[i].y;
+
 	}
 
 	placeFile.close();
@@ -61,7 +72,10 @@ void GraphType::load_file()
 	{
 		for(int j = 0; j < 100; ++j)
 		{
-			weightFile >> this->AdjMatrix[i][j];
+			int num;
+			weightFile >>num;
+			this->AdjMatrix[i][j]=num;
+
 		}
 	}
 }
@@ -130,9 +144,9 @@ void GraphType::setGraphType(int** adjMatrix, NodeType* node_list, int n)
 
 bool GraphType::IsAdjacent(NodeType first,NodeType second)
 {
-	vector<int> adjFirst=getAdjacent(first);//first ������ ������ ���� ������ �޾ƿ�.
+	vector<int> adjFirst=getAdjacent(first);
 	if(find(adjFirst.begin(),adjFirst.end(),second.index)!=adjFirst.end())
-	{// first�� ���� ���� ���Ͽ� second�� �ִ��� �˻��ؼ� ������ true, ������ false ����
+	{
 		return true;
 	}
 	else 
@@ -208,7 +222,8 @@ void GraphType::MakeMappingTable()
     }
 }
 
-vector<vector<int> > GraphType::getMap()
+
+vector<vector<int>> GraphType::getMap()
 {
 	return mappingTable;
 }
