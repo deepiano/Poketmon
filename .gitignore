@@ -4,5 +4,6 @@
 *.exe
 
 # Others #
+.DS_Store
 .vscode
 p1
