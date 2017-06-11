@@ -65,10 +65,10 @@ void SolveA::construct_candidates(vector<NodeType>& sol, bool visited[], vector<
 		cand.push_back(dest.index);
 
 		// Second Comment Solve : stay on current poketstop
-		if (sol.back().MonsterType == POKETSTOP_ID)
-		{
-			cand.push_back(sol.back().index);
-		}
+		// if (sol.back().MonsterType == POKETSTOP_ID)
+		// {
+		// 	cand.push_back(sol.back().index);
+		// }
 	}
 }
 
@@ -107,20 +107,20 @@ void SolveA::backtrack(vector<NodeType>& sol, bool visited[], int time, int num_
 			}
 
 			// Second Comment Solve : stay on current poketstop
-			if (destination == sol.back())
-			{
-				next_sol.push_back(destination);
-				next_time += 15;
-				next_num_must_go_pStop -= 1;
-				next_num_poketball += 3;
-				for (int index = 0; index < pStop_node_index_list.size(); ++index)
-				{
-					next_poketStop_time[pStop_node_index_list[index]] = 0;
-					next_visited[pStop_node_index_list[index]] = false;
-				}
-				next_poketStop_time[destination.index] = 15;
-				next_visited[destination.index] = true;
-			}
+			// if (destination == sol.back())
+			// {
+			// 	next_sol.push_back(destination);
+			// 	next_time += 15;
+			// 	next_num_must_go_pStop -= 1;
+			// 	next_num_poketball += 3;
+			// 	for (int index = 0; index < pStop_node_index_list.size(); ++index)
+			// 	{
+			// 		next_poketStop_time[pStop_node_index_list[index]] = 0;
+			// 		next_visited[pStop_node_index_list[index]] = false;
+			// 	}
+			// 	next_poketStop_time[destination.index] = 15;
+			// 	next_visited[destination.index] = true;
+			// }
 			else
 			{
 				find_shortest_path(destination, next_sol, next_time);
