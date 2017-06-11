@@ -59,6 +59,11 @@ void SolveC::backtrack(vector<NodeType>& sol, bool visited[], int time, bool pok
 			iter = next_sol.end() - (next_sol.size() - sol.size());
 			while (iter != next_sol.end())
 			{
+				if (sol.size() > 1 && iter->index == START_ID)	// new pruning condition 
+				{
+					finished = true;
+					break;
+				}
 				int consuming_time = graph.WeightIs(*(iter-1), *iter);
 				
 				// update p_stop state
@@ -133,28 +138,35 @@ bool SolveC::promising(int num_catch_poketmon)
 void SolveC::process_solution(vector<NodeType>& sol, int time, vector<int> &catch_order)
 {
 	check_for_home(sol, time);
+
 	if ((this->best_route).time > time)
 	{
 		best_route.route = sol;
 		best_route.time = time;
-		cout << "I got it" << endl;
-		cout << "Route : ";
-		for (int i = 0; i < best_route.route.size(); ++i)
-		{
-			cout << best_route.route[i].index << " - " <<  best_route.route[i].MonsterType << " -> " ;
-		}
-		cout << endl;
-		cout << "Catch Order : ";
-		for (int i = 0; i < catch_order.size(); ++i)
-			cout << catch_order[i] << " ";
-		cout << endl;
-		cout << "Time : " << best_route.time << endl << endl;
+		// Test
+		// cout << "I got it" << endl;
+		// cout << "Route : ";
+		// for (int i = 0; i < best_route.route.size(); ++i)
+		// {
+		// 	cout << best_route.route[i].index << " - " <<  best_route.route[i].MonsterType << " -> " ;
+		// }
+		// cout << endl;
+		// cout << "Catch Order : ";
+		// for (int i = 0; i < catch_order.size(); ++i)
+		// 	cout << catch_order[i] << " ";
+		// cout << endl;
+		// cout << "Time : " << best_route.time << endl << endl;
 	}	
 }
 
 
 void SolveC::construct_candidates(vector<NodeType>& sol, bool visited[], vector<int>& cand, int num_poketball, bool poketmon_type_checkList[], int num_must_go_pStop)
 {
+	if (sol.size() == 1)
+	{
+		cand.push_back(53);
+		return;
+	}
 	if (num_must_go_pStop > 0)
 	{
 		NodeType destination;
